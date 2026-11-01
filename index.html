@@ -1,0 +1,1755 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ofcicon</title>
+<meta name="description" content="биты / монтаж / игры ✦ ссылки, бит-машина, радио, мини-игра и скрытая комната">
+<meta name="theme-color" content="#05070a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2305070a'/%3E%3Cg fill='%235cff8a'%3E%3Crect x='7' y='0' width='2' height='2'/%3E%3Crect x='3' y='2' width='10' height='9'/%3E%3Crect x='2' y='4' width='12' height='5'/%3E%3Crect x='3' y='11' width='2' height='2'/%3E%3Crect x='7' y='11' width='2' height='2'/%3E%3Crect x='11' y='11' width='2' height='2'/%3E%3C/g%3E%3Cg fill='%2305070a'%3E%3Crect x='5' y='5' width='2' height='3'/%3E%3Crect x='9' y='5' width='2' height='3'/%3E%3Crect x='7' y='9' width='2' height='1'/%3E%3C/g%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ofcicon.github.io/">
+<meta property="og:title" content="ofcicon">
+<meta property="og:description" content="биты / монтаж / игры ✦ ссылки, бит-машина, радио, мини-игра и скрытая комната">
+<meta property="og:image" content="https://ofcicon.github.io/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ofcicon.github.io/og.jpg">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; font: 14px system-ui, sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: одна колонка ссылок в окнах-консолях; ночь — комната с терминалом, день — пересвеченная улица; праздники перекрашивают акценты */
+  :root {
+    --bg: #05070a;
+    --panel: #080c10;
+    --line: #1a2a22;
+    --text: #c4d3cb;
+    --muted: #6c8077;
+    --accent: #5cff8a;
+    --accent-dim: #2c7a48;
+    --accent-2: #e0473f;
+    --glow: #8f9cff;
+    --logo: #eef3f0;
+    --scan: rgba(0, 0, 0, .28);
+    --f-logo: "Major Mono Display", "IBM Plex Mono", ui-monospace, monospace;
+    --f-mono: "IBM Plex Mono", ui-monospace, Consolas, "Courier New", monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-look]) {
+      --bg: #ece8f4; --panel: #f8f6fc; --line: #d3cde4; --text: #1d1930; --muted: #6b6585;
+      --accent: #0b8a83; --accent-dim: #7cc7c0; --accent-2: #d63a3a; --glow: #b9a8ff; --logo: #1d1930;
+      --scan: rgba(80, 60, 120, .05); color-scheme: light;
+    }
+  }
+  :root[data-look="light"] {
+    --bg: #ece8f4; --panel: #f8f6fc; --line: #d3cde4; --text: #1d1930; --muted: #6b6585;
+    --accent: #0b8a83; --accent-dim: #7cc7c0; --accent-2: #d63a3a; --glow: #b9a8ff; --logo: #1d1930;
+    --scan: rgba(80, 60, 120, .05); color-scheme: light;
+  }
+
+  /* Праздничные палитры: ночь, затем день */
+  :root[data-mode="halloween"] { --accent: #ff8a1f; --accent-dim: #7a4512; --accent-2: #b65cff; --glow: #6a2fbf; }
+  :root[data-mode="newyear"]   { --accent: #ffd166; --accent-dim: #7a6330; --accent-2: #ff4d5e; --glow: #4f7dff; }
+  :root[data-mode="valentine"] { --accent: #ff6b9a; --accent-dim: #7a2e48; --accent-2: #ffb3cf; --glow: #ff4d8d; }
+  :root[data-mode="march8"]    { --accent: #ff8fc4; --accent-dim: #7a3d5c; --accent-2: #ffd166; --glow: #ff8fc4; }
+  :root[data-mode="april1"]    { --accent: #36d6ff; --accent-dim: #1d6a80; --accent-2: #ffde3a; --glow: #ff5cc8; }
+  :root[data-mode="birthday"]  { --accent: #ff5cc8; --accent-dim: #7a2c62; --accent-2: #ffd166; --glow: #8f6bff; }
+  :root[data-look="light"][data-mode="halloween"] { --accent: #c25008; --accent-dim: #f0b27a; --accent-2: #7a3bd1; --glow: #ffb46b; }
+  :root[data-look="light"][data-mode="newyear"]   { --accent: #a8730a; --accent-dim: #e8cf8f; --accent-2: #d32f3f; --glow: #9cc0ff; }
+  :root[data-look="light"][data-mode="valentine"] { --accent: #d6336c; --accent-dim: #f3a6c2; --accent-2: #a61e4d; --glow: #ffb3cf; }
+  :root[data-look="light"][data-mode="march8"]    { --accent: #c2257a; --accent-dim: #f2b3d3; --accent-2: #b7791f; --glow: #ffc9e3; }
+  :root[data-look="light"][data-mode="april1"]    { --accent: #0a84a8; --accent-dim: #9ad9ea; --accent-2: #c79a00; --glow: #ff9ee0; }
+  :root[data-look="light"][data-mode="birthday"]  { --accent: #c21f8f; --accent-dim: #f0a8d9; --accent-2: #b7791f; --glow: #c9b6ff; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--f-mono);
+    font-size: 14px;
+    line-height: 1.6;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 28px 40px;
+    transition: background-color .4s;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  :focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* Фон */
+  #bg, #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #bg { z-index: 0; }
+  #fx { z-index: 2; }
+  .fog {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(60% 45% at 85% 0%, color-mix(in srgb, var(--glow) 24%, transparent), transparent 70%),
+      radial-gradient(45% 40% at 5% 100%, color-mix(in srgb, var(--glow) 16%, transparent), transparent 70%),
+      radial-gradient(30% 25% at 70% 85%, color-mix(in srgb, var(--accent-2) 9%, transparent), transparent 70%);
+  }
+  .scan {
+    position: fixed; inset: 0; z-index: 40; pointer-events: none;
+    background: repeating-linear-gradient(0deg, var(--scan) 0 1px, transparent 1px 3px);
+  }
+
+  /* Фото-подложка: у каждого режима своё фото; ночью оно тёмное и контрастное, днём пересвеченное и размытое */
+  :root { --photo: url("img/night.jpg"); --photo-op: .65; --photo-fx: saturate(.7) contrast(1.1); }
+  :root[data-look="light"] { --photo: url("img/day.jpg"); --photo-op: .55; --photo-fx: blur(7px) brightness(1.6) saturate(.6) contrast(.8); }
+  :root[data-mode="halloween"] { --photo: url("img/halloween.jpg"); }
+  :root[data-mode="newyear"]   { --photo: url("img/newyear.jpg"); }
+  :root[data-mode="valentine"] { --photo: url("img/valentine.jpg"); }
+  :root[data-mode="march8"]    { --photo: url("img/march8.jpg"); }
+  :root[data-mode="april1"]    { --photo: url("img/april1.jpg"); }
+  :root[data-mode="winter"]    { --photo: url("img/winter.jpg"); }
+  :root[data-mode="spring"]    { --photo: url("img/spring.jpg"); }
+  :root[data-mode="summer"]    { --photo: url("img/summer.jpg"); }
+  :root[data-mode="autumn"]    { --photo: url("img/autumn.jpg"); }
+  :root[data-mode="birthday"]  { --photo: url("img/birthday.jpg"); }
+  :root[data-mode]:not([data-mode="lain"]) { --photo-op: .75; --photo-fx: saturate(1) contrast(1.1) brightness(1.05); }
+  :root[data-mode="halloween"]:not([data-look="light"]) { --photo-op: .8; --photo-fx: saturate(1.1) contrast(1.15) brightness(1.3); }
+  :root[data-mode="march8"]:not([data-look="light"]) { --photo-op: .5; --photo-fx: saturate(.9) brightness(.7); }
+  :root[data-look="light"][data-mode]:not([data-mode="lain"]) { --photo-op: .45; --photo-fx: blur(4px) brightness(1.7) saturate(.8) contrast(.8); }
+
+  .photo { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .photo::before {
+    content: ""; position: absolute; inset: -20px;
+    background: var(--photo) center / cover no-repeat;
+    opacity: var(--photo-op); filter: var(--photo-fx);
+    transition: opacity .4s;
+  }
+  .photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 50% 40%, transparent 30%, color-mix(in srgb, var(--bg) 85%, transparent));
+  }
+
+  .page { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; display: grid; gap: 16px; }
+
+  /* Окна */
+  .win {
+    position: relative;
+    background: color-mix(in srgb, var(--panel) 88%, transparent);
+    border: 1px solid var(--line);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 6%, transparent);
+    backdrop-filter: blur(3px);
+    min-width: 0;
+  }
+  .bar {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    padding: 5px 12px; border-bottom: 1px solid var(--line);
+    font-size: 12px; color: var(--muted); white-space: nowrap;
+  }
+  .bar b { color: var(--accent); font-weight: 500; }
+  .bar .ctl { color: var(--accent-dim); flex: none; }
+  .win-body { position: relative; padding: 16px; display: grid; gap: 14px; }
+  h2 { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+  h2::before { content: "> "; color: var(--accent-dim); }
+  .muted { color: var(--muted); }
+
+  .tbtn {
+    font: 13px/1 var(--f-mono); color: var(--accent); background: transparent; cursor: pointer;
+    border: 1px solid var(--accent-dim); padding: 8px 12px;
+  }
+  .tbtn:hover, .tbtn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .tbtn.primary:hover { filter: brightness(1.1); }
+  .look-btn { padding: 3px 8px; font-size: 12px; }
+
+  /* Шапка */
+  .head .win-body { padding: 20px 18px 22px; gap: 16px; overflow: hidden; }
+  .boot { position: relative; z-index: 1; margin: 0; font: 12px/1.7 var(--f-mono); color: var(--accent-dim); white-space: pre-wrap; }
+  .boot .ok { color: var(--accent); }
+  .logo-wrap { position: relative; z-index: 1; transition: transform .6s; }
+  :root[data-mode="april1"] .logo-wrap { transform: rotate(180deg); }
+  .logo {
+    margin: 0; font: 400 clamp(2.6rem, 13vw, 5.6rem)/1 var(--f-logo);
+    color: var(--logo); letter-spacing: .02em;
+    text-shadow: 2px 0 color-mix(in srgb, var(--accent-2) 75%, transparent), -2px 0 color-mix(in srgb, var(--glow) 75%, transparent), 0 0 24px color-mix(in srgb, var(--glow) 40%, transparent);
+    animation: glitch 6s steps(1) infinite;
+  }
+  @keyframes glitch {
+    0%, 91%, 100% { transform: none; }
+    92% { transform: translateX(3px) skewX(-6deg); text-shadow: -4px 0 var(--accent-2), 4px 0 var(--glow); }
+    94% { transform: translateX(-2px); clip-path: inset(30% 0 40% 0); }
+    96% { transform: none; clip-path: none; }
+  }
+  .tagline { position: relative; z-index: 1; margin: 0; font-size: 15px; letter-spacing: .12em; }
+  .tagline i { font-style: normal; color: var(--accent-2); }
+  .cursor { display: inline-block; width: .6em; height: 1.1em; background: var(--accent); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .greet {
+    position: relative; z-index: 1; margin: 0; padding: 8px 12px;
+    border: 1px dashed var(--accent-dim); color: var(--accent); text-wrap: balance;
+  }
+
+  .moon {
+    display: none; position: absolute; z-index: 0; top: 18px; right: 18px; width: 72px; height: 72px; border-radius: 50%;
+    background: radial-gradient(circle at 36% 34%, #fff4dc 0 12%, var(--accent) 72%);
+    box-shadow: 0 0 46px color-mix(in srgb, var(--accent) 70%, transparent);
+    opacity: .85;
+  }
+  :root[data-mode="halloween"] .moon { display: block; }
+  .garland { display: none; justify-content: space-between; padding: 6px 12px 0; }
+  :root[data-mode="newyear"] .garland { display: flex; }
+  .garland span { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: bulb 1.6s steps(1) infinite; }
+  .garland span:nth-child(3n+1) { background: var(--accent-2); box-shadow: 0 0 10px var(--accent-2); animation-delay: .4s; }
+  .garland span:nth-child(3n+2) { background: var(--glow); box-shadow: 0 0 10px var(--glow); animation-delay: .8s; }
+  @keyframes bulb { 50% { opacity: .25; box-shadow: none; } }
+
+  .ticker { overflow: hidden; white-space: nowrap; border-top: 1px solid var(--line); color: var(--accent); font-size: 13px; padding: 6px 0; }
+  .ticker span { display: inline-block; padding-left: 100%; animation: run 26s linear infinite; }
+  @keyframes run { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+  /* Ссылки */
+  .links { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .link {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    border: 1px solid var(--line); text-decoration: none; color: var(--text);
+    background: color-mix(in srgb, var(--panel) 50%, transparent);
+    transition: background-color .15s, color .15s;
+  }
+  .link .tag { flex: none; width: 38px; padding: 2px 0; text-align: center; font-weight: 500; color: var(--accent); border: 1px solid var(--accent-dim); }
+  .link .nm { font-size: 16px; }
+  .link .lead { flex: 1; min-width: 12px; border-bottom: 1px dotted var(--accent-dim); transform: translateY(4px); }
+  .link .hd { color: var(--accent); font-size: 13px; white-space: nowrap; }
+  a.link:hover { background: var(--accent); color: var(--bg); }
+  a.link:hover .tag, a.link:hover .hd { color: var(--bg); border-color: var(--bg); }
+  a.link:hover .lead { border-color: var(--bg); }
+  span.link { opacity: .5; }
+
+  /* День рождения */
+  .big { font: 400 clamp(2.6rem, 11vw, 4rem)/1 var(--f-logo); color: var(--accent); }
+  .bar-y { height: 8px; border: 1px solid var(--accent-dim); }
+  .bar-y i { display: block; height: 100%; background: var(--accent); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .hb {
+    margin: 0; text-align: center; font: 400 clamp(1.6rem, 7vw, 2.6rem)/1.1 var(--f-logo); color: var(--logo);
+    text-shadow: 2px 0 var(--accent-2), -2px 0 var(--glow), 0 0 26px var(--accent);
+  }
+  .cake { display: grid; justify-items: center; margin: 6px auto 0; }
+  .candles { display: flex; gap: 6px; align-items: flex-end; height: 56px; }
+  .candle { width: 22px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; position: relative; }
+  .candle::before {
+    content: ""; position: absolute; left: 7px; bottom: 0; width: 8px; height: 30px;
+    background: repeating-linear-gradient(45deg, var(--accent-2) 0 4px, var(--logo) 4px 8px);
+  }
+  .candle::after {
+    content: ""; position: absolute; left: 6px; bottom: 30px; width: 10px; height: 17px;
+    border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+    background: radial-gradient(circle at 50% 72%, #fff 0 18%, #ffd166 34%, #ff7a1a 70%, transparent 72%);
+    filter: drop-shadow(0 0 6px #ffb347);
+    animation: flame .18s infinite alternate;
+  }
+  .candle.out::after { display: none; }
+  @keyframes flame { to { transform: scaleY(1.12) translateY(-1px) rotate(3deg); } }
+  .tier { border: 1px solid color-mix(in srgb, var(--logo) 30%, transparent); }
+  .tier.t1 { width: 140px; height: 34px; background: linear-gradient(var(--accent-2) 0 30%, var(--accent) 30%); }
+  .tier.t2 { width: 196px; height: 46px; background: linear-gradient(var(--logo) 0 22%, var(--accent-dim) 22%); }
+  .plate { width: 230px; max-width: 100%; height: 6px; background: var(--line); }
+  #cake-msg, #wish { text-align: center; margin: 0; }
+  #wish { color: var(--accent); min-height: 1.6em; text-wrap: balance; }
+
+  /* Статус */
+  .stat { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 13px; }
+  .stat dt { color: var(--muted); }
+  .stat dd { margin: 0; }
+  .counter { display: inline-flex; gap: 2px; }
+  .counter i { font-style: normal; font-weight: 500; color: var(--accent); border: 1px solid var(--accent-dim); padding: 0 4px; }
+
+  /* Окно ввода даты */
+  .modal {
+    position: fixed; inset: 0; z-index: 30; display: grid; place-items: center;
+    padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .modal[hidden] { display: none; }
+  .modal .win { width: min(440px, 100%); background: var(--panel); }
+  select {
+    font: 14px var(--f-mono); color: var(--text); background: var(--bg);
+    border: 1px solid var(--accent-dim); padding: 7px 8px;
+  }
+  label { color: var(--muted); }
+
+  /* Терминал */
+  .term {
+    height: 220px; overflow-y: auto; padding: 10px 12px; font-size: 13px;
+    background: color-mix(in srgb, var(--bg) 70%, transparent); border: 1px solid var(--line);
+  }
+  .term p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .term .in { color: var(--accent); }
+  .term .err { color: var(--accent-2); }
+  .term-form { display: flex; gap: 8px; align-items: center; }
+  .term-form label { color: var(--accent); white-space: nowrap; }
+  .term-form input {
+    flex: 1; min-width: 0; font: 14px var(--f-mono); color: var(--text); background: transparent;
+    border: 0; border-bottom: 1px dashed var(--accent-dim); padding: 6px 2px;
+  }
+  .term-form input:focus { outline: none; border-bottom-color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips .tbtn { padding: 5px 9px; font-size: 12px; }
+
+  /* Бит-машина */
+  .seq-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .seq-ctl input[type="range"] { width: 120px; accent-color: var(--accent); }
+  .bpm-val { color: var(--accent); min-width: 3ch; font-variant-numeric: tabular-nums; }
+  .seq { display: grid; grid-template-columns: 52px repeat(16, minmax(14px, 1fr)); gap: 3px; overflow-x: auto; }
+  .seq .lbl { font-size: 11px; color: var(--muted); align-self: center; }
+  .step {
+    aspect-ratio: 1 / 1.4; min-width: 14px; padding: 0; cursor: pointer;
+    border: 1px solid var(--accent-dim); background: transparent;
+  }
+  .step.q { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .step[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
+  .step.now { outline: 1px solid var(--logo); outline-offset: -1px; }
+  .step.now[aria-pressed="true"] { box-shadow: 0 0 12px var(--accent); }
+
+  /* Курсор в цвет режима (картинка задаётся из скрипта) */
+  html { cursor: var(--cur, auto); }
+  :is(a, button, select, label, .tbtn, .step, .candle, .pet) { cursor: var(--cur-p, pointer); }
+
+  /* Navi-бот */
+  .pet {
+    position: fixed; z-index: 25; width: 56px; height: 56px; padding: 0; border: 0; background: none;
+    right: calc(14px + env(safe-area-inset-right, 0px)); bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+    animation: bob 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 60%, transparent));
+  }
+  .pet svg { width: 100%; height: 100%; display: block; }
+  .pet .body { fill: var(--accent); }
+  .pet .eye { fill: var(--bg); transform-box: fill-box; transform-origin: center; animation: eyeblink 4s infinite; }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+  @keyframes eyeblink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+  .bubble {
+    position: fixed; z-index: 25; max-width: min(240px, calc(100vw - 110px));
+    right: calc(80px + env(safe-area-inset-right, 0px)); bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 10px; font-size: 12px; background: var(--panel); color: var(--text);
+    border: 1px solid var(--accent); box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  /* Мини-игра */
+  .game-hud { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+  .game-hud b { color: var(--accent); font-weight: 500; }
+  .game-wrap { position: relative; }
+  #game-cv {
+    display: block; width: 100%; height: 260px; touch-action: none; cursor: none;
+    border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 75%, transparent);
+  }
+  .game-over {
+    position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 10px; text-align: center;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+  }
+  .game-over[hidden], .bubble[hidden], .saver[hidden] { display: none; }
+
+  /* Заставка */
+  .saver { position: fixed; inset: 0; z-index: 35; background: #000; overflow: hidden; }
+  .saver .dvd {
+    position: absolute; left: 0; top: 0; white-space: nowrap; will-change: transform;
+    font: 400 clamp(2rem, 8vw, 4rem)/1 var(--f-logo); color: var(--accent); text-shadow: 0 0 20px currentColor;
+  }
+  .saver p { position: absolute; left: 0; right: 0; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); margin: 0; text-align: center; color: #777; font-size: 12px; }
+  @media (prefers-reduced-motion: reduce) { .pet, .pet .eye { animation: none; } }
+
+  /* Панель задач и меню «пуск» */
+  body { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .taskbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 28;
+    display: flex; align-items: center; gap: 6px; font-size: 12px;
+    padding: 5px max(8px, env(safe-area-inset-right, 0px)) calc(5px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
+    background: color-mix(in srgb, var(--panel) 92%, transparent); border-top: 1px solid var(--line); backdrop-filter: blur(6px);
+  }
+  .tb-start { padding: 6px 10px; }
+  .tb-wins { flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  .tb-win {
+    font: 12px var(--f-mono); color: var(--text); background: transparent; white-space: nowrap;
+    border: 1px solid var(--line); padding: 5px 8px;
+  }
+  .tb-win:hover { border-color: var(--accent); color: var(--accent); }
+  .tb-win.off { opacity: .45; border-style: dashed; }
+  .tb-tray { display: flex; align-items: center; gap: 8px; margin-left: auto; white-space: nowrap; }
+  .tb-clock { color: var(--accent); font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) { .tb-wins { display: none; } }
+  .start-menu {
+    position: fixed; z-index: 29; display: grid;
+    left: max(8px, env(safe-area-inset-left, 0px)); bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    width: min(260px, calc(100vw - 16px)); max-height: calc(100vh - 80px); overflow-y: auto;
+    background: var(--panel); border: 1px solid var(--accent-dim);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+  .start-menu[hidden] { display: none; }
+  .sm-head { padding: 12px; font: 400 20px/1 var(--f-logo); color: var(--logo); background: linear-gradient(90deg, var(--accent-dim), transparent); }
+  .start-menu button { text-align: left; font: 13px var(--f-mono); color: var(--text); background: none; border: 0; padding: 8px 12px; }
+  .start-menu button:hover, .start-menu button:focus-visible { background: var(--accent); color: var(--bg); outline: none; }
+  .sm-sep { height: 1px; background: var(--line); margin: 4px 0; }
+
+  /* Управление окнами */
+  .ctl button { font: 12px var(--f-mono); color: var(--accent-dim); background: none; border: 0; padding: 0 4px; }
+  .ctl button:hover { color: var(--accent); }
+  .win.min > :not(.bar) { display: none !important; }
+  .win[hidden] { display: none; }
+  .win.flash { animation: winflash .5s 2; }
+  @keyframes winflash { 50% { box-shadow: 0 0 0 1px var(--accent), 0 0 40px color-mix(in srgb, var(--accent) 50%, transparent); } }
+
+  /* Ачивки и всплывашки */
+  .ach { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+  .ach li { border: 1px solid var(--line); padding: 8px 10px; display: grid; gap: 2px; min-width: 0; }
+  .ach li b { font-weight: 500; color: var(--accent); }
+  .ach li small { color: var(--muted); }
+  .ach li.locked { opacity: .45; }
+  .ach li.locked b { color: var(--muted); }
+  .toasts {
+    position: fixed; z-index: 36; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px));
+    width: min(340px, calc(100vw - 32px)); display: grid; gap: 6px; pointer-events: none;
+  }
+  .toast {
+    background: var(--panel); border: 1px solid var(--accent); padding: 8px 12px; font-size: 13px;
+    box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 30%, transparent); animation: toastin .3s ease-out;
+  }
+  .toast b { color: var(--accent); font-weight: 500; }
+  .toast small { color: var(--muted); }
+  @keyframes toastin { from { transform: translateY(-12px); opacity: 0; } }
+
+  /* Радио */
+  #viz { display: block; width: 100%; height: 90px; border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 75%, transparent); }
+  .now { margin: 0; font-size: 13px; color: var(--muted); }
+  .now b { color: var(--accent); font-weight: 500; }
+
+  /* Скрытая комната */
+  .ascii {
+    margin: 0; font: 12px/1.25 var(--f-mono); color: var(--accent); white-space: pre; overflow-x: auto;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  @media (prefers-reduced-motion: reduce) { .win.flash, .toast { animation: none; } }
+
+  /* Секретный глитч */
+  .glitching .page { animation: shake .12s steps(2) infinite; filter: hue-rotate(90deg) contrast(1.3); }
+  @keyframes shake { 0% { transform: translate(2px, -1px); } 50% { transform: translate(-3px, 2px); } 100% { transform: translate(1px, 1px); } }
+  @media (prefers-reduced-motion: reduce) { .glitching .page { animation: none; } }
+
+  /* Низ */
+  .foot { position: relative; z-index: 1; display: grid; gap: 12px; justify-items: center; text-align: center; font-size: 12px; color: var(--muted); }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .b88 {
+    width: 88px; height: 31px; display: grid; place-items: center; text-align: center;
+    font: 500 10px/1.1 var(--f-mono); letter-spacing: .06em; border: 1px solid var(--accent-dim); background: var(--bg); color: var(--accent);
+  }
+  .b88.a { color: var(--logo); font-family: var(--f-logo); font-size: 12px; text-shadow: 1px 0 var(--accent-2), -1px 0 var(--glow); }
+  .b88.d { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo, .cursor, .ticker span, .garland span, .candle::after { animation: none; }
+    .ticker span { padding-left: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="photo" aria-hidden="true"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="fog" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="scan" aria-hidden="true"></div>
+
+<div class="page" id="top">
+
+  <header class="win head">
+    <div class="bar">
+      <span><b>▮</b> navi://ofcicon</span>
+      <button type="button" class="tbtn look-btn" id="look-btn">☾ ночь</button>
+    </div>
+    <div class="garland" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="win-body">
+      <div class="moon" aria-hidden="true"></div>
+      <pre class="boot" aria-hidden="true">NAVI OS 0.2 .................. <span class="ok">OK</span>
+соединение с сетью ........... <span class="ok">OK</span>
+режим: <span class="ok" id="boot-mode">...</span></pre>
+      <div class="logo-wrap"><h1 class="logo">ofcicon</h1></div>
+      <p class="tagline">биты <i>/</i> монтаж <i>/</i> игры <span class="cursor" aria-hidden="true"></span></p>
+      <p class="greet" id="greet">...</p>
+    </div>
+    <div class="ticker" aria-hidden="true"><span id="ticker">0101 ✦ ты подключён ✦ ofcicon ✦ 1010</span></div>
+  </header>
+
+  <section class="win" id="links">
+    <div class="bar"><span><b>▮</b> links.url</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>где меня найти</h2>
+      <ul class="links" id="socials"></ul>
+    </div>
+  </section>
+
+  <section class="win" id="terminal">
+    <div class="bar"><span><b>▮</b> terminal.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>терминал</h2>
+      <div class="term" id="term" aria-live="polite"></div>
+      <form class="term-form" id="term-form">
+        <label for="term-in" id="prompt-label">guest@wired:~$</label>
+        <input id="term-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="напиши help">
+      </form>
+      <div class="chips" id="chips">
+        <button type="button" class="tbtn" data-cmd="help">help</button>
+        <button type="button" class="tbtn" data-cmd="links">links</button>
+        <button type="button" class="tbtn" data-cmd="party">party</button>
+        <button type="button" class="tbtn" data-cmd="matrix">matrix</button>
+        <button type="button" class="tbtn" data-cmd="glitch">glitch</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" id="beat">
+    <div class="bar"><span><b>▮</b> beatbox.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>бит-машина</h2>
+      <p class="muted" style="margin:0">Нажимай клетки и собери свой бит. 16 шагов, 4 дорожки.</p>
+      <div class="seq-ctl">
+        <button type="button" class="tbtn primary" id="seq-play">▶ play</button>
+        <label for="bpm">bpm</label>
+        <input type="range" id="bpm" min="70" max="180" value="140">
+        <span class="bpm-val" id="bpm-val">140</span>
+      </div>
+      <div class="seq" id="seq"></div>
+      <div class="chips">
+        <button type="button" class="tbtn" data-preset="trap">trap</button>
+        <button type="button" class="tbtn" data-preset="boombap">boom bap</button>
+        <button type="button" class="tbtn" data-preset="random">рандом</button>
+        <button type="button" class="tbtn" data-preset="clear">очистить</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" id="radio">
+    <div class="bar"><span><b>▮</b> radio.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>радио ofcicon</h2>
+      <p class="muted" style="margin:0">Музыка генерируется прямо в браузере и каждый раз звучит немного по-новому.</p>
+      <canvas id="viz" aria-hidden="true"></canvas>
+      <p class="now" id="now">сейчас: тишина</p>
+      <div class="seq-ctl">
+        <button type="button" class="tbtn primary" id="radio-play">▶ слушать</button>
+        <label for="station">волна</label>
+        <select id="station">
+          <option value="ambient">lain ambient</option>
+          <option value="lofi">lofi ночь</option>
+        </select>
+        <label for="vol">громкость</label>
+        <input type="range" id="vol" min="0" max="100" value="60">
+      </div>
+    </div>
+  </section>
+
+  <section class="win" id="game">
+    <div class="bar"><span><b>▮</b> packet.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>лови пакеты</h2>
+      <p class="muted" style="margin:0">Лови нули и единицы, уворачивайся от красных ×. Звёздочка даёт +5. Управление: мышка, палец или стрелки.</p>
+      <div class="game-hud">
+        <span>счёт: <b id="g-score">0</b></span>
+        <span>жизни: <b id="g-lives">♥♥♥</b></span>
+        <span>рекорд: <b id="g-best">0</b></span>
+      </div>
+      <div class="game-wrap">
+        <canvas id="game-cv" tabindex="0" aria-label="Игра «лови пакеты»"></canvas>
+        <div class="game-over" id="g-over">
+          <p id="g-msg" style="margin:0">готов подключиться?</p>
+          <button type="button" class="tbtn primary" id="g-start">▶ старт</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="win" id="achievements">
+    <div class="bar"><span><b>▮</b> achievements.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>ачивки</h2>
+      <p class="muted" style="margin:0" id="ach-count">открыто 0</p>
+      <ul class="ach" id="ach-list"></ul>
+    </div>
+  </section>
+
+  <section class="win" id="secret" hidden>
+    <div class="bar"><span><b>▮</b> secret.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>скрытая комната</h2>
+      <pre class="ascii" aria-hidden="true">   ______________________
+  |  __________________  |
+  | |                  | |
+  | |  0101  ofcicon   | |
+  | |  1010  ✦ wired   | |
+  | |__________________| |
+  |______________________|
+        _|________|_
+       |____________|</pre>
+      <p style="margin:0">Ты нашёл скрытую комнату. Здесь нет ничего, кроме тебя и сети. Мало кто сюда доходит.</p>
+      <div class="row"><button type="button" class="tbtn primary" id="wired-btn">войти в сеть</button></div>
+    </div>
+  </section>
+
+  <section class="win" id="birthday">
+    <div class="bar"><span><b>▮</b> birthday.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body" id="bday-box"></div>
+  </section>
+
+  <section class="win" id="status">
+    <div class="bar"><span><b>▮</b> status</span></div>
+    <div class="win-body">
+      <dl class="stat">
+        <dt>сегодня</dt><dd id="today">1 ноября</dd>
+        <dt>режим</dt><dd id="mode-name">...</dd>
+        <dt>твои визиты</dt><dd><span class="counter" id="counter"><i>0</i><i>0</i><i>0</i><i>0</i><i>0</i><i>1</i></span></dd>
+        <dt>в сети</dt><dd>ты</dd>
+        <dt>ты здесь уже</dt><dd id="uptime">00:00</dd>
+        <dt>твой ник</dt><dd id="nick">не указан</dd>
+        <dt>ближайший праздник</dt><dd id="next-hol">...</dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="row" style="justify-content:center">
+      <label for="mode-sel">режим сайта:</label>
+      <select id="mode-sel"></select>
+    </div>
+    <div class="badges" aria-hidden="true">
+      <span class="b88 a">ofcicon</span>
+      <span class="b88">TG ✦ YT</span>
+      <span class="b88 d">CONNECTED</span>
+    </div>
+    <span>дата рождения хранится только в твоём браузере ✦ © <span id="year">2026</span> ofcicon</span>
+    <span>фото: <span id="credit">Unsplash</span> / Unsplash</span>
+  </footer>
+</div>
+
+<nav class="taskbar" aria-label="Панель задач">
+  <button type="button" class="tbtn primary tb-start" id="tb-start" aria-expanded="false" aria-controls="start-menu">▮ пуск</button>
+  <div class="tb-wins" id="tb-wins"></div>
+  <div class="tb-tray">
+    <button type="button" class="tb-win" id="tb-sound">♪ выкл</button>
+    <span class="tb-clock" id="tb-clock">00:00</span>
+  </div>
+</nav>
+<div class="start-menu" id="start-menu" role="menu" hidden>
+  <div class="sm-head" id="sm-name">ofcicon</div>
+  <div id="sm-items" style="display:grid"></div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<button type="button" class="pet" id="pet" aria-label="Navi-бот: нажми, и он что-нибудь скажет">
+  <svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true">
+    <rect class="body" x="7" y="0" width="2" height="2"/>
+    <rect class="body" x="3" y="2" width="10" height="9"/>
+    <rect class="body" x="2" y="4" width="12" height="5"/>
+    <rect class="body" x="3" y="11" width="2" height="2"/>
+    <rect class="body" x="7" y="11" width="2" height="2"/>
+    <rect class="body" x="11" y="11" width="2" height="2"/>
+    <rect class="eye" x="5" y="5" width="2" height="3"/>
+    <rect class="eye" x="9" y="5" width="2" height="3"/>
+    <rect class="eye" x="7" y="9" width="2" height="1"/>
+  </svg>
+</button>
+<div class="bubble" id="bubble" role="status" hidden></div>
+
+<div class="saver" id="saver" hidden>
+  <div class="dvd" id="dvd">ofcicon</div>
+  <p>заставка ✦ двинь мышкой или нажми любую клавишу</p>
+</div>
+
+<div class="modal" id="bday-modal" role="dialog" aria-modal="true" aria-labelledby="bday-title" hidden>
+  <form class="win" id="bday-form">
+    <div class="bar"><span><b>▮</b> wired://new_user</span><span class="ctl" aria-hidden="true">[x]</span></div>
+    <div class="win-body">
+      <h2 id="bday-title">когда у тебя день рождения?</h2>
+      <p class="muted" style="margin:0">В этот день сайт тебя поздравит. Дата остаётся только в твоём браузере и никуда не отправляется.</p>
+      <div class="row">
+        <label for="bd-day">день</label><select id="bd-day"></select>
+        <label for="bd-month">месяц</label><select id="bd-month"></select>
+      </div>
+      <div class="row">
+        <button type="submit" class="tbtn primary">сохранить</button>
+        <button type="button" class="tbtn" id="bd-skip">пропустить</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  /* =====================================================
+     ССЫЛКИ — ЗДЕСЬ. url: "" — ссылка ещё не добавлена.
+     ===================================================== */
+  const SITE = {
+    socials: [
+      { name: "Telegram", tag: "TG", handle: "@OFCICON",       url: "https://t.me/OFCICON" },
+      { name: "YouTube",  tag: "YT", handle: "@notenoughrose", url: "https://youtube.com/@notenoughrose" },
+      { name: "TikTok",   tag: "TT", handle: "",               url: "" }, // вставь ссылку на TikTok
+    ],
+  };
+  /* ===================================================== */
+
+  const $ = id => document.getElementById(id);
+  const root = document.documentElement;
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
+  const MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const M = today.getMonth() + 1, D = today.getDate();
+  $("today").textContent = `${D} ${MONTHS[M - 1]}`;
+  $("year").textContent = today.getFullYear();
+
+  /* ---------- Режимы: праздники и сезоны ---------- */
+  const daysTo = (m, d) => {
+    let t = new Date(today.getFullYear(), m - 1, d);
+    if (t < today) t = new Date(today.getFullYear() + 1, m - 1, d);
+    return Math.round((t - today) / 864e5);
+  };
+  const MODES = {
+    halloween: { name: "хэллоуин", fx: ["bats", "embers"], from: [10, 24], to: [11, 2],
+      greet: () => "хэллоуин в сети ✦ не выключай свет", ticker: "✦ trick or treat ✦ кто-то есть в проводах ✦ не выключай свет ✦" },
+    newyear: { name: "новый год", fx: ["snow"], from: [12, 20], to: [1, 10],
+      greet: () => M === 12 ? `до нового года ${daysTo(1, 1)} ${plural(daysTo(1, 1), "день", "дня", "дней")} ✦ сеть украшена` : "с новым годом ✦ сеть перезагружена",
+      ticker: "✦ с новым годом ✦ загрузка 2027 ✦ гирлянда подключена ✦" },
+    valentine: { name: "день святого валентина", fx: ["hearts"], from: [2, 12], to: [2, 15],
+      greet: () => "14 февраля ✦ любовь передаётся по сети", ticker: "✦ <3 ✦ сигнал от сердца ✦ <3 ✦" },
+    march8: { name: "8 марта", fx: ["petals"], from: [3, 6], to: [3, 9],
+      greet: () => "с 8 марта ✦ весна загружается", ticker: "✦ с 8 марта ✦ цветы в сети ✦" },
+    april1: { name: "1 апреля", fx: ["confetti"], from: [4, 1], to: [4, 1],
+      greet: () => "1 апреля ✦ сайт сломался (нет)", ticker: "✦ никому не верь ✦ даже этой строке ✦" },
+    winter: { name: "зима", fx: ["snow"], greet: () => "зима ✦ сеть замерзает", ticker: "✦ холодно ✦ сеть замерзает ✦ грейся у монитора ✦" },
+    spring: { name: "весна", fx: ["petals"], greet: () => "весна ✦ сигнал оттаял", ticker: "✦ весна ✦ сигнал оттаял ✦" },
+    summer: { name: "лето", fx: ["fireflies"], greet: () => "лето ✦ ночи короткие, сеть тёплая", ticker: "✦ лето ✦ светлячки в проводах ✦" },
+    autumn: { name: "осень", fx: ["leaves"], greet: () => "осень ✦ листья падают в сеть", ticker: "✦ осень ✦ листья падают в сеть ✦" },
+    birthday: { name: "твой день рождения", fx: ["confetti"], greet: () => "сегодня твой день ✦ с днём рождения", ticker: "✦ с днём рождения ✦ с днём рождения ✦ с днём рождения ✦" },
+    lain: { name: "lain (без сезона)", fx: [], greet: () => "просто сеть ✦ без праздников и сезонов", ticker: "✦ ты в сети ✦ все связаны ✦" },
+  };
+  // Авторы фото: у lain своё фото для ночи и для дня
+  const CREDITS = {
+    halloween: "Michael Starkie", newyear: "Lidia Nikole", valentine: "Olivier Collet", march8: "Zhang qc",
+    april1: "Sebastian Schuster", winter: "Josh Hild", spring: "majed swan", summer: "Rain Wu",
+    autumn: "Noah Silliman", birthday: "Duncan Kidd",
+  };
+  const credit = () => CREDITS[root.dataset.mode] || (root.dataset.look === "light" ? "Jezael Melgoza" : "Fran Jacquier");
+  const inRange = (from, to) => {
+    const md = M * 100 + D, a = from[0] * 100 + from[1], b = to[0] * 100 + to[1];
+    return a <= b ? md >= a && md <= b : md >= a || md <= b;
+  };
+  function autoMode() {
+    if (isBirthday()) return "birthday";
+    for (const id of ["halloween", "newyear", "valentine", "march8", "april1"]) if (inRange(MODES[id].from, MODES[id].to)) return id;
+    return M === 12 || M <= 2 ? "winter" : M <= 5 ? "spring" : M <= 8 ? "summer" : "autumn";
+  }
+
+  /* ---------- День рождения ---------- */
+  const leap = y => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+  function getBday() {
+    const v = store.get("ofcicon-bday");
+    const m = v && v.match(/^(\d{1,2})-(\d{1,2})$/);
+    return m ? { m: +m[1], d: +m[2] } : null;
+  }
+  function nextBday(b) {
+    const mk = y => new Date(y, b.m - 1, b.m === 2 && b.d === 29 && !leap(y) ? 28 : b.d);
+    let n = mk(today.getFullYear());
+    if (n < today) n = mk(today.getFullYear() + 1);
+    return n;
+  }
+  function isBirthday() { const b = getBday(); return !!b && nextBday(b).getTime() === today.getTime(); }
+
+  const WISHES = [
+    "пусть все биты сводятся с первого раза",
+    "пусть рендер никогда не вылетает",
+    "пусть вайфай ловит везде, даже в лифте",
+    "больше сна, меньше багов",
+    "пусть сейвы никогда не теряются",
+    "пусть музыка в наушниках всегда попадает в настроение",
+    "пусть всё задуманное загрузится на 100%",
+    "пусть рядом будут свои люди",
+    "пусть этот год пройдёт без лагов",
+    "пусть желания сбываются быстрее, чем грузится YouTube",
+  ];
+
+  function renderBday() {
+    const box = $("bday-box");
+    const b = getBday();
+    if (root.dataset.mode === "birthday") {
+      box.innerHTML = `
+        <p class="hb">с днём рождения${nick ? ", " + esc(nick) : ""}!</p>
+        <div class="cake" aria-label="торт со свечами">
+          <div class="candles">${[1, 2, 3, 4, 5].map(i => `<button type="button" class="candle" data-candle aria-label="задуть свечу ${i}"></button>`).join("")}</div>
+          <div class="tier t1"></div><div class="tier t2"></div><div class="plate"></div>
+        </div>
+        <p id="cake-msg">задуй все свечи и загадай желание</p>
+        <p id="wish"></p>
+        <div class="row" style="justify-content:center">
+          <button type="button" class="tbtn primary" data-act="wish">пожелание</button>
+          <button type="button" class="tbtn" data-act="song">♪ мелодия</button>
+          <button type="button" class="tbtn" data-act="relight">зажечь свечи</button>
+        </div>`;
+      return;
+    }
+    if (!b) {
+      box.innerHTML = `<h2>день рождения</h2>
+        <p style="margin:0">Дата не указана. Укажи её, и в этот день сайт тебя поздравит.</p>
+        <div class="row"><button type="button" class="tbtn primary" data-act="set">указать дату</button></div>`;
+      return;
+    }
+    const n = Math.round((nextBday(b) - today) / 864e5);
+    box.innerHTML = `<h2>день рождения</h2>
+      <div class="big">${n}</div>
+      <p style="margin:0">${plural(n, "день", "дня", "дней")} до твоего дня рождения (${b.d} ${MONTHS[b.m - 1]})</p>
+      <div class="bar-y" aria-hidden="true"><i style="width:${Math.max(2, Math.round((1 - n / 365) * 100))}%"></i></div>
+      <div class="row"><button type="button" class="tbtn" data-act="set">изменить дату</button></div>`;
+  }
+
+  $("bday-box").addEventListener("click", e => {
+    const candle = e.target.closest("[data-candle]");
+    if (candle && !candle.classList.contains("out")) {
+      candle.classList.add("out");
+      const r = candle.getBoundingClientRect();
+      burst(14, r.left + r.width / 2, r.top);
+      if (!document.querySelector(".candle:not(.out)")) {
+        $("cake-msg").textContent = "желание загадано ✦ оно уже в сети";
+        burst(220, innerWidth / 2, innerHeight / 3);
+      }
+      return;
+    }
+    const act = e.target.closest("[data-act]")?.dataset.act;
+    if (act === "set") openModal();
+    if (act === "wish") { $("wish").textContent = WISHES[Math.floor(Math.random() * WISHES.length)]; burst(40, innerWidth / 2, innerHeight / 2); }
+    if (act === "song") playSong();
+    if (act === "relight") { document.querySelectorAll(".candle").forEach(c => c.classList.remove("out")); $("cake-msg").textContent = "задуй все свечи и загадай желание"; }
+  });
+
+  // «С днём рождения» квадратной волной, как на старом компьютере
+  let songPlaying = false;
+  function playSong() {
+    if (songPlaying) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const ac = new AC(); songPlaying = true;
+    const F = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+    const tune = "G4 .75,G4 .25,A4 1,G4 1,C5 1,B4 2,G4 .75,G4 .25,A4 1,G4 1,D5 1,C5 2,G4 .75,G4 .25,G5 1,E5 1,C5 1,B4 1,A4 2,F5 .75,F5 .25,E5 1,C5 1,D5 1,C5 2";
+    let t = ac.currentTime + .05; const beat = .34;
+    tune.split(",").forEach(s => {
+      const [n, len] = s.split(" "); const dur = parseFloat(len) * beat;
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = "square"; o.frequency.value = F[n];
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .01); g.gain.setValueAtTime(.07, t + dur * .8); g.gain.linearRampToValueAtTime(0, t + dur * .95);
+      o.connect(g).connect(ac.destination); o.start(t); o.stop(t + dur);
+      t += dur;
+    });
+    setTimeout(() => { songPlaying = false; ac.close(); }, (t - ac.currentTime + .2) * 1000);
+  }
+
+  /* ---------- Окно ввода даты ---------- */
+  const daySel = $("bd-day"), monSel = $("bd-month");
+  daySel.innerHTML = Array.from({ length: 31 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("");
+  monSel.innerHTML = MONTHS.map((m, i) => `<option value="${i + 1}">${m}</option>`).join("");
+  function openModal() {
+    const b = getBday();
+    if (b) { daySel.value = b.d; monSel.value = b.m; }
+    $("bday-modal").hidden = false;
+    daySel.focus();
+  }
+  function closeModal() { $("bday-modal").hidden = true; }
+  $("bday-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const m = +monSel.value, d = Math.min(+daySel.value, [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1]);
+    store.set("ofcicon-bday", `${m}-${d}`);
+    closeModal();
+    modeSel.value = "auto";
+    apply(autoMode());
+  });
+  $("bd-skip").addEventListener("click", () => { try { sessionStorage.setItem("ofcicon-skip", "1"); } catch (e) {} closeModal(); });
+  $("bday-modal").addEventListener("keydown", e => { if (e.key === "Escape") $("bd-skip").click(); });
+
+  /* ---------- Ссылки и счётчик ---------- */
+  $("socials").innerHTML = SITE.socials.map(s => s.url
+    ? `<li><a class="link" href="${esc(s.url)}" target="_blank" rel="noopener"><span class="tag">${esc(s.tag)}</span><span class="nm">${esc(s.name)}</span><span class="lead"></span><span class="hd">${esc(s.handle || "открыть")} ↗</span></a></li>`
+    : `<li><span class="link"><span class="tag">${esc(s.tag)}</span><span class="nm">${esc(s.name)}</span><span class="lead"></span><span class="hd">скоро</span></span></li>`
+  ).join("");
+
+  let visits = 1;
+  try { visits = (parseInt(localStorage.getItem("ofcicon-visits"), 10) || 0) + 1; localStorage.setItem("ofcicon-visits", String(visits)); } catch (e) {}
+  $("counter").innerHTML = String(visits).padStart(6, "0").split("").map(d => `<i>${d}</i>`).join("");
+
+  /* ---------- Фон и частицы ---------- */
+  const bg = $("bg"), bctx = bg.getContext("2d");
+  const fx = $("fx"), fctx = fx.getContext("2d");
+  let W = 0, H = 0, C = {};
+  const css = n => getComputedStyle(root).getPropertyValue(n).trim();
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  // ночь: поле из нулей и единиц
+  const CELL = 16; let cols = 0, rowsN = 0, bits = [], lastBits = 0, wave = 0, matrixUntil = 0;
+  function drawBit(x, y) {
+    const c = bits[y * cols + x];
+    bctx.clearRect(x * CELL, y * CELL, CELL, CELL);
+    bctx.globalAlpha = c.a; bctx.fillStyle = C.accent;
+    bctx.fillText(c.d, x * CELL + CELL / 2, y * CELL + CELL / 2);
+    bctx.globalAlpha = 1;
+  }
+  // день: размытые огни
+  let orbs = [];
+  function drawOrbs() {
+    bctx.globalAlpha = 1; bctx.clearRect(0, 0, W, H);
+    for (const o of orbs) {
+      o.x += o.vx; o.y += o.vy;
+      if (o.x < -o.r) o.x = W + o.r; if (o.x > W + o.r) o.x = -o.r;
+      if (o.y < -o.r) o.y = H + o.r; if (o.y > H + o.r) o.y = -o.r;
+      const g = bctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+      g.addColorStop(0, o.c); g.addColorStop(1, "transparent");
+      bctx.globalAlpha = o.a; bctx.fillStyle = g;
+      bctx.beginPath(); bctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); bctx.fill();
+    }
+    bctx.globalAlpha = 1;
+  }
+  function buildBg() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    for (const cv of [bg, fx]) { cv.width = W * dpr; cv.height = H * dpr; }
+    bctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    fctx.font = "13px 'IBM Plex Mono', monospace"; fctx.textAlign = "center"; fctx.textBaseline = "middle";
+    if (root.dataset.look === "dark") {
+      bctx.font = "12px 'IBM Plex Mono', monospace"; bctx.textAlign = "center"; bctx.textBaseline = "middle";
+      cols = Math.ceil(W / CELL); rowsN = Math.ceil(H / CELL);
+      bits = Array.from({ length: cols * rowsN }, () => ({ d: Math.random() < .5 ? "0" : "1", a: rnd(.04, .14) }));
+      bctx.clearRect(0, 0, W, H);
+      for (let y = 0; y < rowsN; y++) for (let x = 0; x < cols; x++) drawBit(x, y);
+    } else {
+      orbs = Array.from({ length: 14 }, () => ({
+        x: rnd(0, W), y: rnd(0, H), r: rnd(70, 220), vx: rnd(-.25, .25), vy: rnd(-.15, .15),
+        c: pick([C.glow, C.accent, C.accent2, "#ffffff", "#ffffff"]), a: rnd(.18, .4),
+      }));
+      drawOrbs();
+    }
+  }
+  function tickBits(t) {
+    if (t - lastBits < 110) return; lastBits = t;
+    const boost = t < matrixUntil;
+    for (let n = 0; n < Math.max(20, bits.length * (boost ? .08 : .015)); n++) {
+      const i = Math.floor(Math.random() * bits.length);
+      bits[i].d = bits[i].d === "0" ? "1" : "0"; bits[i].a = boost ? rnd(.2, .7) : rnd(.04, .14);
+      drawBit(i % cols, Math.floor(i / cols));
+    }
+    wave = (wave + 1) % (rowsN + 20);
+    if (wave < rowsN) for (let x = 0; x < cols; x++) if (Math.random() < .35) { bits[wave * cols + x].a = rnd(.22, .42); drawBit(x, wave); }
+  }
+
+  // частицы праздников и сезонов
+  const COUNT = { snow: 70, leaves: 22, petals: 26, hearts: 16, fireflies: 26, bats: 8, embers: 30, confetti: 34 };
+  const CONF = () => [C.accent, C.accent2, C.glow, "#ffd166", "#5cff8a", "#36d6ff"];
+  let parts = [], ambient = [];
+  function spawn(kind, init) {
+    const p = { kind, x: rnd(0, W), y: init ? rnd(0, H) : -20, r: 2, rot: rnd(0, 6.28), vr: rnd(-.03, .03), ph: rnd(0, 6.28), a: 1 };
+    switch (kind) {
+      case "snow": p.r = rnd(1, 3.2); p.vy = rnd(.4, 1.3); p.vx = rnd(-.3, .3); p.c = C.look === "dark" ? "#e8eeff" : C.glow; break;
+      case "leaves": p.r = rnd(5, 9); p.vy = rnd(.6, 1.4); p.vx = rnd(-.6, .6); p.c = pick(["#d9822b", "#b5452a", "#e0b04a", "#8c3b1f"]); break;
+      case "petals": p.r = rnd(3, 6); p.vy = rnd(.5, 1.1); p.vx = rnd(.2, .9); p.c = pick(["#ffb7d0", "#ffd6e6", "#ff9ec7", "#fff0f5"]); break;
+      case "hearts": p.r = rnd(8, 16); p.y = init ? rnd(0, H) : H + 20; p.vy = -rnd(.4, 1); p.vx = 0; p.c = pick([C.accent, C.accent2]); p.a = rnd(.5, .9); break;
+      case "fireflies": p.y = rnd(0, H); p.r = rnd(1.5, 3); p.vx = rnd(-.4, .4); p.vy = rnd(-.4, .4); p.c = C.look === "dark" ? "#e8ff7a" : "#fff3b0"; break;
+      case "bats": p.x = init ? rnd(0, W) : (Math.random() < .5 ? -40 : W + 40); p.y = rnd(20, H * .6); p.vx = (p.x > W / 2 ? -1 : 1) * rnd(1, 2.2); p.vy = 0; p.r = rnd(.7, 1.3); p.c = C.look === "dark" ? C.accent2 : "#2a1d36"; break;
+      case "embers": p.y = init ? rnd(0, H) : H + 10; p.r = rnd(1, 2.4); p.vy = -rnd(.3, 1); p.vx = rnd(-.2, .2); p.c = C.accent; break;
+      case "confetti": p.r = rnd(4, 8); p.vy = rnd(1, 2.4); p.vx = rnd(-.5, .5); p.c = pick(CONF()); p.vr = rnd(-.15, .15); break;
+    }
+    return p;
+  }
+  function burst(n, x, y) {
+    if (reduced) return;
+    for (let i = 0; i < n; i++) {
+      const p = spawn("confetti"); p.burst = true; p.x = x; p.y = y;
+      p.vx = rnd(-7, 7); p.vy = rnd(-11, -3); parts.push(p);
+    }
+  }
+  function heart(ctx, s) {
+    ctx.beginPath(); ctx.moveTo(0, s * .25);
+    ctx.bezierCurveTo(0, 0, -s / 2, 0, -s / 2, s * .25); ctx.bezierCurveTo(-s / 2, s * .55, 0, s * .7, 0, s);
+    ctx.bezierCurveTo(0, s * .7, s / 2, s * .55, s / 2, s * .25); ctx.bezierCurveTo(s / 2, 0, 0, 0, 0, s * .25); ctx.fill();
+  }
+  function bat(ctx, f) {
+    ctx.beginPath(); ctx.moveTo(0, -2);
+    ctx.quadraticCurveTo(-8, -10 - f * 7, -20, -4 - f * 9); ctx.quadraticCurveTo(-14, -1, -12, 3); ctx.quadraticCurveTo(-6, 0, 0, 5);
+    ctx.quadraticCurveTo(6, 0, 12, 3); ctx.quadraticCurveTo(14, -1, 20, -4 - f * 9); ctx.quadraticCurveTo(8, -10 - f * 7, 0, -2);
+    ctx.fill(); ctx.beginPath(); ctx.ellipse(0, 0, 3.2, 5, 0, 0, Math.PI * 2); ctx.fill();
+  }
+  function stepFx(t, move) {
+    fctx.clearRect(0, 0, W, H);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      if (p.kind === "glyph") {
+        if (move) { p.x += p.vx || 0; p.y += p.vy; p.a -= .025; }
+        if (p.a <= 0) { parts.splice(i, 1); continue; }
+        fctx.globalAlpha = p.a; fctx.fillStyle = p.c; fctx.fillText(p.d, p.x, p.y); fctx.globalAlpha = 1;
+        continue;
+      }
+      if (move) {
+        if (p.burst) { p.vy += .25; p.vx *= .99; }
+        else if (p.kind === "fireflies") { p.vx += rnd(-.05, .05); p.vy += rnd(-.05, .05); p.vx = Math.max(-.6, Math.min(.6, p.vx)); p.vy = Math.max(-.6, Math.min(.6, p.vy)); }
+        p.x += p.vx + (["snow", "leaves", "petals", "hearts"].includes(p.kind) ? Math.sin(t / 900 + p.ph) * .4 : 0);
+        p.y += p.vy + (p.kind === "bats" ? Math.sin(t / 300 + p.ph) * .6 : 0);
+        p.rot += p.vr;
+        const out = p.y > H + 30 || p.y < -40 || p.x < -60 || p.x > W + 60;
+        if (out) {
+          if (p.burst) { parts.splice(i, 1); continue; }
+          if (p.kind === "fireflies") { p.x = (p.x + W) % W; p.y = (p.y + H) % H; }
+          else Object.assign(p, spawn(p.kind));
+        }
+      }
+      fctx.save(); fctx.translate(p.x, p.y); fctx.fillStyle = p.c; fctx.globalAlpha = p.a;
+      switch (p.kind) {
+        case "snow": fctx.beginPath(); fctx.arc(0, 0, p.r, 0, 6.28); fctx.fill(); break;
+        case "leaves": fctx.rotate(p.rot); fctx.beginPath(); fctx.ellipse(0, 0, p.r, p.r * .45, 0, 0, 6.28); fctx.fill(); break;
+        case "petals": fctx.rotate(p.rot); fctx.beginPath(); fctx.ellipse(0, 0, p.r, p.r * .6, 0, 0, 6.28); fctx.fill(); break;
+        case "hearts": fctx.rotate(Math.sin(t / 700 + p.ph) * .3); heart(fctx, p.r); break;
+        case "fireflies": {
+          fctx.globalAlpha = .4 + .6 * Math.abs(Math.sin(t / 600 + p.ph));
+          fctx.shadowColor = p.c; fctx.shadowBlur = 12; fctx.beginPath(); fctx.arc(0, 0, p.r, 0, 6.28); fctx.fill(); break;
+        }
+        case "bats": fctx.scale(p.r * (p.vx < 0 ? -1 : 1), p.r); bat(fctx, Math.sin(t / 70 + p.ph)); break;
+        case "embers": fctx.globalAlpha = .3 + .7 * Math.abs(Math.sin(t / 250 + p.ph)); fctx.shadowColor = p.c; fctx.shadowBlur = 8; fctx.beginPath(); fctx.arc(0, 0, p.r, 0, 6.28); fctx.fill(); break;
+        case "confetti": fctx.rotate(p.rot); fctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); break;
+      }
+      fctx.restore();
+    }
+  }
+  function seedFx() {
+    const k = Math.max(.5, Math.min(1.4, (W * H) / (1280 * 800)));
+    parts = parts.filter(p => p.burst);
+    for (const kind of ambient) for (let i = 0; i < Math.round(COUNT[kind] * k); i++) parts.push(spawn(kind, true));
+  }
+  function readColors() {
+    C = { bg: css("--bg"), accent: css("--accent"), accent2: css("--accent-2"), glow: css("--glow"), look: root.dataset.look };
+  }
+  function frame(t) {
+    if (root.dataset.look === "dark") tickBits(t); else drawOrbs();
+    stepFx(t, true);
+    requestAnimationFrame(frame);
+  }
+  addEventListener("resize", () => { buildBg(); seedFx(); if (reduced) stepFx(0, false); });
+
+  /* ---------- Применение темы и режима ---------- */
+  function refreshVisuals() {
+    readColors(); buildBg(); seedFx(); setCursor();
+    if (reduced) stepFx(0, false);
+  }
+  function setLook(look) {
+    root.dataset.look = look;
+    $("look-btn").textContent = look === "dark" ? "☀ день" : "☾ ночь";
+    $("look-btn").setAttribute("aria-label", look === "dark" ? "Включить светлую тему" : "Включить тёмную тему");
+  }
+  function apply(mode) {
+    root.dataset.mode = mode;
+    const m = MODES[mode];
+    seenModes.add(mode);
+    if (seenModes.size >= 5) unlock("modes");
+    if (mode === "birthday" && isBirthday()) unlock("bday");
+    ambient = m.fx;
+    $("greet").textContent = m.greet();
+    $("mode-name").textContent = m.name;
+    $("boot-mode").textContent = m.name;
+    $("ticker").textContent = `0101 ✦ ты подключён ${m.ticker} ofcicon ✦ 1010`;
+    $("credit").textContent = credit();
+    renderBday();
+    refreshVisuals();
+    if (mode === "birthday") setTimeout(() => burst(180, innerWidth / 2, innerHeight / 3), 300);
+  }
+
+  $("look-btn").addEventListener("click", () => {
+    const next = root.dataset.look === "dark" ? "light" : "dark";
+    setLook(next); store.set("ofcicon-look", next); refreshVisuals();
+    $("credit").textContent = credit();
+  });
+
+  const modeSel = $("mode-sel");
+  modeSel.innerHTML = `<option value="auto">авто (по дате)</option>` +
+    ["lain", "halloween", "newyear", "valentine", "march8", "april1", "winter", "spring", "summer", "autumn", "birthday"]
+      .map(id => `<option value="${id}">${MODES[id].name}</option>`).join("");
+  modeSel.addEventListener("change", () => apply(modeSel.value === "auto" ? autoMode() : modeSel.value));
+
+  /* ---------- Терминал ---------- */
+  const term = $("term"), termIn = $("term-in");
+  function print(html, cls) {
+    const p = document.createElement("p");
+    if (cls) p.className = cls;
+    p.innerHTML = html;
+    term.appendChild(p);
+    term.scrollTop = term.scrollHeight;
+  }
+  const linkLine = s => s.url ? `${esc(s.name).padEnd(10, ".")} <a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.handle || s.url)}</a>` : `${esc(s.name).padEnd(10, ".")} скоро`;
+  const findSocial = n => SITE.socials.find(s => s.name.toLowerCase() === n || s.tag.toLowerCase() === n);
+  const COMMANDS = {
+    help: () => print([
+      "help ........ список команд",
+      "links ....... все ссылки",
+      "tg / yt / tiktok ... одна ссылка",
+      "whoami ...... кто ты",
+      "date ........ сегодня и режим",
+      "theme day | night ... тема",
+      "mode [имя] .. режим сайта (без имени — список)",
+      "bday ........ указать день рождения",
+      "beat ........ включить бит-машину",
+      "party ....... конфетти",
+      "matrix ...... ночью цифры сходят с ума",
+      "glitch ...... сломать сайт (ненадолго)",
+      "game ........ мини-игра «лови пакеты»",
+      "pet ......... позвать navi",
+      "screensaver . включить заставку",
+      "radio ....... включить радио",
+      "name [ник] .. представиться",
+      "ask [вопрос]  спросить шар предсказаний",
+      "ach ......... твои ачивки",
+      "echo [текст]  повторить текст",
+      "clear ....... очистить экран",
+    ].join("\n")),
+    links: () => SITE.socials.forEach(s => print(linkLine(s))),
+    whoami: () => print(`гость сети ✦ это твой визит №${visits}`),
+    date: () => print(`${D} ${MONTHS[M - 1]} ${today.getFullYear()} ✦ режим: ${MODES[root.dataset.mode].name}`),
+    theme: a => {
+      const next = a === "day" ? "light" : a === "night" ? "dark" : root.dataset.look === "dark" ? "light" : "dark";
+      if (next !== root.dataset.look) $("look-btn").click();
+      print(next === "dark" ? "ночная тема включена" : "дневная тема включена");
+    },
+    mode: a => {
+      if (a !== "auto" && !MODES[a]) {
+        if (a) print(`нет режима «${esc(a)}»`, "err");
+        return print("режимы: auto, " + Object.keys(MODES).join(", "));
+      }
+      modeSel.value = a; apply(a === "auto" ? autoMode() : a);
+      print(`режим: ${MODES[root.dataset.mode].name}`);
+    },
+    bday: () => { openModal(); print("окно открыто"); },
+    beat: () => { $("beat").scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); if (!seqPlaying) toggleSeq(); print("бит-машина играет ♪"); },
+    party: () => { burst(200, innerWidth / 2, innerHeight / 3); print("✦ ✦ ✦ party ✦ ✦ ✦"); unlock("party"); },
+    matrix: () => {
+      if (root.dataset.look !== "dark") $("look-btn").click();
+      matrixUntil = performance.now() + 5000; print("wake up...");
+    },
+    glitch: () => { doGlitch(); print("с̷и̴с̸т̵е̶м̷а̴ ̸с̵л̶о̷м̴а̸н̵а̶", "err"); },
+    echo: (a, raw) => print(esc(raw.replace(/^echo\s*/i, "")) || " "),
+    clear: () => { term.innerHTML = ""; },
+    game: () => { $("game").scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); gStart(); print("packet.exe запущен"); },
+    pet: () => { petTalk(); print("navi: я тут, справа внизу"); },
+    screensaver: () => { startSaver(); print("заставка включена"); },
+    radio: () => { openWin("radio"); toggleRadio(true); print("радио включено ♪"); },
+    name: (a, raw) => {
+      const v = raw.replace(/^name\s*/i, "").trim().slice(0, 20);
+      if (!v) return print(nick ? `твой ник: ${esc(nick)}` : "напиши так: name твой_ник");
+      nick = v; store.set("ofcicon-name", nick); applyNick(); unlock("name");
+      print(`приятно познакомиться, ${esc(nick)} ✦`);
+    },
+    ask: (a, raw) => {
+      if (!raw.replace(/^ask\s*/i, "").trim()) return print("задай вопрос, например: ask я стану звездой?");
+      print(`шар предсказаний: ${pick(BALL)}`);
+    },
+    ach: () => { openWin("achievements"); print($("ach-count").textContent); },
+    sudo: () => print("доступ запрещён. хорошая попытка.", "err"),
+    lain: () => print("ты уже в сети. все связаны."),
+    secret: () => print("есть один код из старых игр... ↑ ↑ ↓ ↓ ← → ← → B A"),
+    ls: () => print("links.url  birthday.exe  beatbox.exe  terminal.exe  secret.txt"),
+    "cat": a => a === "secret.txt" ? COMMANDS.secret() : print(`cat: ${esc(a || "")}: нет такого файла`, "err"),
+  };
+  const termHistory = []; let histPos = 0;
+  function run(raw) {
+    const line = raw.trim(); if (!line) return;
+    termHistory.push(line); histPos = termHistory.length;
+    if (++cmdCount >= 10) unlock("hacker");
+    print(`guest@wired:~$ ${esc(line)}`, "in");
+    const [cmd, arg] = line.toLowerCase().split(/\s+/);
+    const s = findSocial(cmd === "tiktok" ? "tiktok" : cmd);
+    if (s) return print(linkLine(s));
+    if (COMMANDS[cmd]) return COMMANDS[cmd](arg, line);
+    print(`команда не найдена: ${esc(cmd)}. напиши help`, "err");
+  }
+  $("term-form").addEventListener("submit", e => { e.preventDefault(); run(termIn.value); termIn.value = ""; });
+  termIn.addEventListener("keydown", e => {
+    if (e.key === "ArrowUp" && histPos > 0) { histPos--; termIn.value = termHistory[histPos]; e.preventDefault(); }
+    if (e.key === "ArrowDown") { histPos = Math.min(termHistory.length, histPos + 1); termIn.value = termHistory[histPos] || ""; e.preventDefault(); }
+  });
+  $("chips").addEventListener("click", e => { const b = e.target.closest("[data-cmd]"); if (b) run(b.dataset.cmd); });
+  print("NAVI terminal 0.2 ✦ напиши help, чтобы увидеть команды");
+
+  /* ---------- Глитч и секретный код ---------- */
+  let glitchTimer;
+  function doGlitch() {
+    document.body.classList.add("glitching");
+    clearTimeout(glitchTimer);
+    glitchTimer = setTimeout(() => document.body.classList.remove("glitching"), 2200);
+  }
+  const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+  let konami = 0;
+  addEventListener("keydown", e => {
+    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    konami = k === KONAMI[konami] ? konami + 1 : k === KONAMI[0] ? 1 : 0;
+    if (konami === KONAMI.length) {
+      konami = 0; doGlitch(); burst(260, innerWidth / 2, innerHeight / 3);
+      matrixUntil = performance.now() + 5000;
+      print("✦ секрет найден ✦ ты настоящий житель сети", "in");
+      unlock("secret"); openWin("secret");
+      $("ticker").textContent = "✦ секрет найден ✦ ты настоящий житель сети ✦ ofcicon ✦";
+    }
+  });
+
+  /* ---------- След из цифр за курсором ---------- */
+  if (!reduced && matchMedia("(pointer: fine)").matches) {
+    let lastTrail = 0;
+    addEventListener("pointermove", e => {
+      if (e.timeStamp - lastTrail < 35) return; lastTrail = e.timeStamp;
+      parts.push({ kind: "glyph", burst: true, x: e.clientX + rnd(-6, 6), y: e.clientY + rnd(-6, 6), vy: rnd(.3, .9), a: .9, d: Math.random() < .5 ? "0" : "1", c: C.accent });
+    });
+  }
+
+  /* ---------- Таймер в статусе ---------- */
+  const enteredAt = Date.now();
+  setInterval(() => {
+    const s = Math.floor((Date.now() - enteredAt) / 1000);
+    $("uptime").textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  }, 1000);
+
+  /* ---------- Бит-машина ---------- */
+  const TRACKS = ["kick", "snare", "hat", "synth"];
+  const PRESETS = {
+    trap:    { bpm: 140, kick: "x.....x...x.....", snare: "....x.......x...", hat: "x.x.x.x.xxx.x.xx", synth: "x.......x...x..." },
+    boombap: { bpm: 90,  kick: "x......x..x.....", snare: "....x.......x...", hat: "x.x.x.x.x.x.x.x.", synth: "........x......." },
+  };
+  const pattern = {};
+  TRACKS.forEach(t => pattern[t] = Array(16).fill(false));
+  const seqEl = $("seq");
+  seqEl.innerHTML = TRACKS.map(t => `<span class="lbl">${t}</span>` +
+    Array.from({ length: 16 }, (_, s) => `<button type="button" class="step${s % 4 === 0 ? " q" : ""}" data-t="${t}" data-s="${s}" aria-pressed="false" aria-label="${t}, шаг ${s + 1}"></button>`).join("")).join("");
+  const stepBtn = (t, s) => seqEl.querySelector(`[data-t="${t}"][data-s="${s}"]`);
+  function syncSeq() { TRACKS.forEach(t => pattern[t].forEach((on, s) => stepBtn(t, s).setAttribute("aria-pressed", String(on)))); }
+  function loadPreset(name) {
+    if (name === "clear") TRACKS.forEach(t => pattern[t].fill(false));
+    else if (name === "random") {
+      const dens = { kick: .25, snare: .15, hat: .55, synth: .2 };
+      TRACKS.forEach(t => { for (let s = 0; s < 16; s++) pattern[t][s] = Math.random() < dens[t]; });
+      pattern.kick[0] = true;
+    } else {
+      const p = PRESETS[name];
+      TRACKS.forEach(t => { for (let s = 0; s < 16; s++) pattern[t][s] = p[t][s] === "x"; });
+      $("bpm").value = p.bpm; $("bpm-val").textContent = p.bpm;
+    }
+    syncSeq();
+  }
+  seqEl.addEventListener("click", e => {
+    const b = e.target.closest(".step"); if (!b) return;
+    const t = b.dataset.t, s = +b.dataset.s;
+    pattern[t][s] = !pattern[t][s]; b.setAttribute("aria-pressed", String(pattern[t][s]));
+    if (pattern[t][s]) { const a = audioCtx(); hit(t, s, a.currentTime); }
+  });
+  document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => loadPreset(b.dataset.preset)));
+  $("bpm").addEventListener("input", e => { $("bpm-val").textContent = e.target.value; });
+
+  let ac, noiseBuf, bus, analyser;
+  function audioCtx() {
+    if (!ac) {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      // общая шина: всё, что звучит на сайте, проходит через анализатор для визуализатора
+      bus = ac.createGain(); analyser = ac.createAnalyser(); analyser.fftSize = 128;
+      bus.connect(analyser); analyser.connect(ac.destination);
+      noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+      const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    if (ac.state === "suspended") ac.resume();
+    return ac;
+  }
+  function env(g, t, peak, len) { g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(.001, t + len); }
+  function noise(t, freq, peak, len) {
+    const src = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    src.buffer = noiseBuf; f.type = "highpass"; f.frequency.value = freq; env(g, t, peak, len);
+    src.connect(f).connect(g).connect(bus); src.start(t); src.stop(t + len);
+  }
+  const SCALE = [220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33];
+  function hit(track, step, t) {
+    if (track === "kick") {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(40, t + .12); env(g, t, .9, .35);
+      o.connect(g).connect(bus); o.start(t); o.stop(t + .35);
+    } else if (track === "snare") {
+      noise(t, 1200, .5, .18);
+      const o = ac.createOscillator(), g = ac.createGain(); o.type = "triangle"; o.frequency.value = 190; env(g, t, .3, .1);
+      o.connect(g).connect(bus); o.start(t); o.stop(t + .1);
+    } else if (track === "hat") {
+      noise(t, 7000, .18, .05);
+    } else {
+      const o = ac.createOscillator(), g = ac.createGain(); o.type = "square"; o.frequency.value = SCALE[(step * 3) % 8]; env(g, t, .08, .22);
+      o.connect(g).connect(bus); o.start(t); o.stop(t + .22);
+    }
+  }
+  let seqPlaying = false, seqStep = 0, nextTime = 0, seqTimer;
+  function markStep(s) {
+    seqEl.querySelectorAll(".step.now").forEach(b => b.classList.remove("now"));
+    if (s >= 0) TRACKS.forEach(t => stepBtn(t, s).classList.add("now"));
+  }
+  function schedule() {
+    while (nextTime < ac.currentTime + .1) {
+      const s = seqStep, when = nextTime;
+      TRACKS.forEach(t => { if (pattern[t][s]) hit(t, s, when); });
+      setTimeout(() => { if (seqPlaying) markStep(s); }, Math.max(0, (when - ac.currentTime) * 1000));
+      nextTime += 60 / +$("bpm").value / 4;
+      seqStep = (seqStep + 1) % 16;
+    }
+  }
+  function toggleSeq() {
+    seqPlaying = !seqPlaying;
+    $("seq-play").textContent = seqPlaying ? "■ stop" : "▶ play";
+    if (seqPlaying) { audioCtx(); seqStep = 0; nextTime = ac.currentTime + .05; seqTimer = setInterval(schedule, 25); vizLoop(); unlock("beat"); }
+    else { clearInterval(seqTimer); markStep(-1); }
+  }
+  $("seq-play").addEventListener("click", toggleSeq);
+  loadPreset("trap");
+
+  /* ---------- Курсор в цвет режима ---------- */
+  function setCursor() {
+    const arrow = fill => `url("data:image/svg+xml,${encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' width='22' height='24' viewBox='0 0 22 24'><path d='M2 2 L2 19 L7 14 L10 21 L13 20 L10 13 L16 13 Z' fill='${fill}' stroke='#05070a' stroke-width='1.5'/></svg>`
+    )}") 2 2`;
+    root.style.setProperty("--cur", `${arrow(C.accent)}, auto`);
+    root.style.setProperty("--cur-p", `${arrow(C.accent2)}, pointer`);
+  }
+
+  /* ---------- Взрыв цифр по клику на пустом месте ---------- */
+  addEventListener("pointerdown", e => {
+    if (reduced || e.target.closest("a, button, input, select, label, canvas, .term")) return;
+    for (let i = 0; i < 12; i++) parts.push({
+      kind: "glyph", burst: true, x: e.clientX, y: e.clientY, vx: rnd(-2.6, 2.6), vy: rnd(-2.6, 1.6), a: 1,
+      d: Math.random() < .5 ? "0" : "1", c: pick([C.accent, C.accent2, C.glow]),
+    });
+  });
+
+  /* ---------- Navi-бот ---------- */
+  const PET_LINES = [
+    "привет, я navi ✦ живу на этом сайте",
+    "попробуй написать help в терминале",
+    "собери бит в beatbox.exe, я послушаю",
+    "а ты знаешь секретный код?",
+    "подпишись на telegram, там интересно",
+    "я сделан из нулей и единиц",
+    "ofcicon скоро сделает игру. а пока поиграй в packet.exe",
+    "если долго ничего не трогать, включится заставка",
+    "кликни по пустому месту, будет красиво",
+  ];
+  const PET_MODE = {
+    halloween: "бу! испугался?", newyear: "хо-хо-хо, загружаю подарки", birthday: "с днём рождения!!! торт настоящий, честно",
+    winter: "холодно в проводах", spring: "у меня сакура в кэше", summer: "светлячки щекочут антенну",
+    autumn: "листья застревают в портах", valentine: "<3 отправлено", march8: "цветы доставлены ✦",
+    april1: "я не бот. честно.", lain: "все связаны",
+  };
+  let bubbleTimer;
+  function say(text) {
+    const b = $("bubble"); b.textContent = text; b.hidden = false;
+    clearTimeout(bubbleTimer); bubbleTimer = setTimeout(() => { b.hidden = true; }, 4500);
+  }
+  let petCount = 0;
+  function petTalk() {
+    const m = PET_MODE[root.dataset.mode];
+    say(m && Math.random() < .4 ? m : pick(PET_LINES));
+    if (++petCount >= 10) unlock("pet");
+  }
+  $("pet").addEventListener("click", petTalk);
+  setTimeout(() => { if ($("bday-modal").hidden) say(`привет${nick ? ", " + nick : ""}! я navi ✦ нажми на меня`); }, 3500);
+
+  /* ---------- Мини-игра «лови пакеты» ---------- */
+  const gcv = $("game-cv"), g = gcv.getContext("2d");
+  let G = null, gW = 0, gH = 0, best = parseInt(store.get("ofcicon-best"), 10) || 0;
+  $("g-best").textContent = best;
+  function gSize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2), r = gcv.getBoundingClientRect();
+    gW = r.width; gH = r.height; gcv.width = gW * dpr; gcv.height = gH * dpr;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.font = "16px 'IBM Plex Mono', monospace"; g.textAlign = "center"; g.textBaseline = "middle";
+  }
+  function gIdle() {
+    gSize(); g.clearRect(0, 0, gW, gH);
+    for (let i = 0; i < 26; i++) { g.globalAlpha = rnd(.15, .5); g.fillStyle = C.accent; g.fillText(Math.random() < .5 ? "0" : "1", rnd(10, gW - 10), rnd(10, gH - 10)); }
+    g.globalAlpha = 1;
+  }
+  function gHud() {
+    $("g-score").textContent = G.score; $("g-lives").textContent = "♥".repeat(G.lives) || "—"; $("g-best").textContent = best;
+    if (G.score >= 10) unlock("game10");
+    if (G.score >= 50) unlock("game50");
+  }
+  function gStart() {
+    gSize();
+    G = { x: gW / 2, items: [], score: 0, lives: 3, spawn: 20, flash: 0, left: false, right: false, over: false };
+    $("g-over").hidden = true; gHud();
+    gcv.focus({ preventScroll: true });
+    requestAnimationFrame(gLoop);
+  }
+  function gOver() {
+    G.over = true;
+    const record = G.score > best;
+    if (record) { best = G.score; store.set("ofcicon-best", String(best)); const r = gcv.getBoundingClientRect(); burst(120, r.left + r.width / 2, r.top + r.height / 2); }
+    gHud();
+    $("g-msg").textContent = `соединение потеряно ✦ счёт ${G.score}${record ? " ✦ новый рекорд!" : ""}`;
+    $("g-start").textContent = "▶ ещё раз";
+    $("g-over").hidden = false;
+  }
+  function gLoop() {
+    if (!G || G.over) return;
+    const speed = Math.min(6, 1.8 + G.score * .03), padW = 70, padY = gH - 16;
+    if (G.left) G.x -= 7; if (G.right) G.x += 7;
+    G.x = Math.max(padW / 2, Math.min(gW - padW / 2, G.x));
+    if (--G.spawn <= 0) {
+      const r = Math.random();
+      G.items.push({ x: rnd(14, gW - 14), y: -12, type: r < .2 ? "virus" : r < .25 ? "star" : "bit", d: Math.random() < .5 ? "0" : "1", v: speed * rnd(.8, 1.3) });
+      G.spawn = Math.max(12, 38 - G.score * .4);
+    }
+    g.clearRect(0, 0, gW, gH);
+    if (G.flash > 0) { g.globalAlpha = G.flash / 30; g.fillStyle = C.accent2; g.fillRect(0, 0, gW, gH); g.globalAlpha = 1; G.flash--; }
+    for (let i = G.items.length - 1; i >= 0; i--) {
+      const it = G.items[i]; it.y += it.v;
+      if (it.y >= padY - 8 && it.y <= padY + 6 && Math.abs(it.x - G.x) < padW / 2 + 8) {
+        if (it.type === "virus") { G.lives--; G.flash = 30; } else G.score += it.type === "star" ? 5 : 1;
+        G.items.splice(i, 1); gHud();
+        if (G.lives <= 0) return gOver();
+        continue;
+      }
+      if (it.y > gH + 14) { G.items.splice(i, 1); continue; }
+      g.fillStyle = it.type === "virus" ? C.accent2 : it.type === "star" ? "#ffd166" : C.accent;
+      g.fillText(it.type === "virus" ? "×" : it.type === "star" ? "✦" : it.d, it.x, it.y);
+    }
+    g.fillStyle = C.accent;
+    g.fillRect(G.x - padW / 2, padY, padW, 5);
+    g.fillRect(G.x - padW / 2, padY - 6, 3, 6); g.fillRect(G.x + padW / 2 - 3, padY - 6, 3, 6);
+    requestAnimationFrame(gLoop);
+  }
+  const gMove = e => { if (G && !G.over) { const r = gcv.getBoundingClientRect(); G.x = e.clientX - r.left; } };
+  gcv.addEventListener("pointermove", gMove);
+  gcv.addEventListener("pointerdown", gMove);
+  gcv.addEventListener("keydown", e => {
+    if (!G || G.over) return;
+    if (e.key === "ArrowLeft") { G.left = true; e.preventDefault(); }
+    if (e.key === "ArrowRight") { G.right = true; e.preventDefault(); }
+  });
+  gcv.addEventListener("keyup", e => { if (!G) return; if (e.key === "ArrowLeft") G.left = false; if (e.key === "ArrowRight") G.right = false; });
+  $("g-start").addEventListener("click", gStart);
+  requestAnimationFrame(gIdle);
+
+  /* ---------- Заставка: логотип отскакивает от краёв ---------- */
+  let idleAt = Date.now(), saverOn = false, saverAt = 0;
+  const dvd = { x: 40, y: 40, vx: 2.2, vy: 1.7, ci: 0 };
+  function startSaver() {
+    saverOn = true; saverAt = Date.now(); $("saver").hidden = false;
+    const el = $("dvd"); el.style.color = C.accent;
+    if (reduced) { el.style.transform = `translate(${(innerWidth - el.offsetWidth) / 2}px, ${(innerHeight - el.offsetHeight) / 2}px)`; return; }
+    requestAnimationFrame(saverLoop);
+  }
+  function saverLoop() {
+    if (!saverOn) return;
+    const el = $("dvd"), w = el.offsetWidth, h = el.offsetHeight;
+    dvd.x += dvd.vx; dvd.y += dvd.vy;
+    let hit = false;
+    if (dvd.x <= 0 || dvd.x + w >= innerWidth) { dvd.vx *= -1; dvd.x = Math.max(0, Math.min(innerWidth - w, dvd.x)); hit = true; }
+    if (dvd.y <= 0 || dvd.y + h >= innerHeight) { dvd.vy *= -1; dvd.y = Math.max(0, Math.min(innerHeight - h, dvd.y)); hit = true; }
+    if (hit) { dvd.ci = (dvd.ci + 1) % 4; el.style.color = [C.accent, C.accent2, C.glow, "#ffffff"][dvd.ci]; }
+    el.style.transform = `translate(${dvd.x}px, ${dvd.y}px)`;
+    requestAnimationFrame(saverLoop);
+  }
+  function wake() {
+    idleAt = Date.now();
+    if (saverOn && Date.now() - saverAt > 600) { saverOn = false; $("saver").hidden = true; }
+  }
+  ["pointermove", "pointerdown", "keydown", "wheel", "touchstart"].forEach(ev => addEventListener(ev, wake, { passive: true }));
+  setInterval(() => {
+    if (!saverOn && Date.now() - idleAt > 45000 && $("bday-modal").hidden && !(G && !G.over) && !seqPlaying && !radioOn) { startSaver(); unlock("afk"); }
+  }, 1000);
+
+  /* ---------- Звуки интерфейса ---------- */
+  let soundOn = store.get("ofcicon-sound") === "1";
+  function blip(freq = 880, len = .05, type = "square", vol = .04) {
+    if (!soundOn || !(navigator.userActivation?.hasBeenActive ?? true)) return;
+    const a = audioCtx(), t = a.currentTime, o = a.createOscillator(), gn = a.createGain();
+    o.type = type; o.frequency.value = freq;
+    gn.gain.setValueAtTime(vol, t); gn.gain.exponentialRampToValueAtTime(.0001, t + len);
+    o.connect(gn).connect(bus); o.start(t); o.stop(t + len);
+  }
+  function toggleSound() {
+    soundOn = !soundOn; store.set("ofcicon-sound", soundOn ? "1" : "0");
+    $("tb-sound").textContent = soundOn ? "♪ вкл" : "♪ выкл";
+    if (soundOn) blip(988, .08);
+  }
+  $("tb-sound").textContent = soundOn ? "♪ вкл" : "♪ выкл";
+  $("tb-sound").addEventListener("click", toggleSound);
+  document.addEventListener("click", e => { if (e.target.closest("button, a") && e.target.id !== "tb-sound") blip(660, .035); });
+  termIn.addEventListener("keydown", () => blip(1400 + Math.random() * 400, .012, "square", .012));
+
+  /* ---------- Ачивки ---------- */
+  const ACH = [
+    ["first", "подключение", "зайти на сайт"],
+    ["secret", "житель сети", "найти секретный код"],
+    ["beat", "битмейкер", "запустить бит-машину"],
+    ["radio", "на волне", "включить радио"],
+    ["game10", "ловец пакетов", "набрать 10 очков в packet.exe"],
+    ["game50", "сетевой бог", "набрать 50 очков в packet.exe"],
+    ["hacker", "хакер", "ввести 10 команд в терминале"],
+    ["party", "тусовщик", "устроить party"],
+    ["pet", "друг navi", "нажать на navi 10 раз"],
+    ["modes", "путешественник", "посмотреть 5 разных режимов сайта"],
+    ["night", "ночная смена", "зайти между полуночью и пятью утра"],
+    ["afk", "afk", "дождаться заставки"],
+    ["name", "представился", "указать ник командой name"],
+    ["bday", "именинник", "зайти в свой день рождения"],
+  ];
+  let achGot = {};
+  try { achGot = JSON.parse(store.get("ofcicon-ach") || "{}") || {}; } catch (e) {}
+  let cmdCount = 0;
+  const seenModes = new Set();
+  function renderAch() {
+    $("ach-count").textContent = `открыто ${ACH.filter(([id]) => achGot[id]).length} из ${ACH.length}`;
+    $("ach-list").innerHTML = ACH.map(([id, t, d]) =>
+      `<li class="${achGot[id] ? "" : "locked"}"><b>${achGot[id] ? "[x]" : "[ ]"} ${t}</b><small>${d}</small></li>`).join("");
+  }
+  function toast(html) {
+    const el = document.createElement("div"); el.className = "toast"; el.innerHTML = html;
+    $("toasts").appendChild(el); setTimeout(() => el.remove(), 3800);
+  }
+  function unlock(id) {
+    if (achGot[id]) return;
+    const a = ACH.find(x => x[0] === id); if (!a) return;
+    achGot[id] = Date.now(); store.set("ofcicon-ach", JSON.stringify(achGot)); renderAch();
+    toast(`ачивка открыта ✦ <b>${a[1]}</b><br><small>${a[2]}</small>`);
+    [523, 659, 784].forEach((f, i) => setTimeout(() => blip(f, .09, "square", .05), i * 90));
+  }
+  renderAch();
+
+  /* ---------- Ник и шар предсказаний ---------- */
+  let nick = (store.get("ofcicon-name") || "").slice(0, 20);
+  function applyNick() {
+    $("prompt-label").textContent = `${nick || "guest"}@wired:~$`;
+    $("nick").textContent = nick || "не указан (команда name)";
+  }
+  const BALL = [
+    "да, без вариантов", "сеть говорит да", "скорее да, чем нет", "спроси позже, идёт загрузка",
+    "сигнал слабый, попробуй ещё раз", "не рассчитывай на это", "нет. даже не думай",
+    "звёзды сказали «возможно»", "100%, только сохрани прогресс", "ответ потерялся в шуме",
+  ];
+
+  /* ---------- Окна и панель задач ---------- */
+  const WIN_TITLES = {
+    links: "links.url", terminal: "terminal.exe", beat: "beatbox.exe", radio: "radio.exe", game: "packet.exe",
+    achievements: "achievements.exe", secret: "secret.exe", birthday: "birthday.exe", status: "status",
+  };
+  let closed = {};
+  try { closed = JSON.parse(store.get("ofcicon-closed") || "{}") || {}; } catch (e) {}
+  const saveClosed = () => store.set("ofcicon-closed", JSON.stringify(closed));
+  for (const [id, title] of Object.entries(WIN_TITLES)) {
+    const w = $(id), bar = w.querySelector(".bar");
+    let ctl = bar.querySelector(".ctl");
+    if (!ctl) { ctl = document.createElement("span"); ctl.className = "ctl"; bar.appendChild(ctl); }
+    ctl.removeAttribute("aria-hidden");
+    ctl.innerHTML = `<button type="button" data-wc="min" aria-label="Свернуть ${title}">_</button><button type="button" data-wc="close" aria-label="Закрыть ${title}">×</button>`;
+    if (id === "secret") w.hidden = !achGot.secret;
+    else if (closed[id]) w.hidden = true;
+  }
+  function renderTaskbar() {
+    $("tb-wins").innerHTML = Object.keys(WIN_TITLES).filter(id => id !== "secret" || achGot.secret)
+      .map(id => `<button type="button" class="tb-win${$(id).hidden ? " off" : ""}" data-open="${id}">${WIN_TITLES[id]}</button>`).join("");
+  }
+  function openWin(id) {
+    const w = $(id); w.hidden = false; w.classList.remove("min");
+    delete closed[id]; saveClosed(); renderTaskbar();
+    w.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    w.classList.remove("flash"); void w.offsetWidth; w.classList.add("flash");
+  }
+  function closeWin(id) {
+    $(id).hidden = true; closed[id] = 1; saveClosed(); renderTaskbar();
+    if (id === "radio") toggleRadio(false);
+    if (id === "beat" && seqPlaying) toggleSeq();
+  }
+  document.addEventListener("click", e => {
+    const wc = e.target.closest("[data-wc]");
+    if (wc) { const id = wc.closest(".win").id; if (wc.dataset.wc === "min") wc.closest(".win").classList.toggle("min"); else closeWin(id); return; }
+    const o = e.target.closest("[data-open]");
+    if (o) { openWin(o.dataset.open); closeStart(); return; }
+    if (!e.target.closest("#start-menu, #tb-start")) closeStart();
+  });
+
+  function renderStart() {
+    $("sm-name").textContent = nick || "ofcicon";
+    const acts = [
+      ["theme", root.dataset.look === "dark" ? "☀ дневная тема" : "☾ ночная тема"],
+      ["radio", radioOn ? "■ выключить радио" : "♪ включить радио"],
+      ["party", "✦ party"],
+      ["saver", "▭ заставка"],
+      ["sound", soundOn ? "♪ выключить звуки" : "♪ включить звуки"],
+    ];
+    $("sm-items").innerHTML =
+      Object.keys(WIN_TITLES).filter(id => id !== "secret" || achGot.secret)
+        .map(id => `<button type="button" role="menuitem" data-open="${id}">▸ ${WIN_TITLES[id]}</button>`).join("") +
+      `<div class="sm-sep"></div>` +
+      acts.map(([a, l]) => `<button type="button" role="menuitem" data-sm="${a}">${l}</button>`).join("");
+  }
+  function closeStart() { $("start-menu").hidden = true; $("tb-start").setAttribute("aria-expanded", "false"); }
+  $("tb-start").addEventListener("click", () => {
+    if (!$("start-menu").hidden) return closeStart();
+    renderStart(); $("start-menu").hidden = false; $("tb-start").setAttribute("aria-expanded", "true");
+    $("start-menu").querySelector("button")?.focus();
+  });
+  $("start-menu").addEventListener("click", e => {
+    const a = e.target.closest("[data-sm]")?.dataset.sm; if (!a) return;
+    closeStart();
+    if (a === "theme") $("look-btn").click();
+    if (a === "radio") { openWin("radio"); toggleRadio(); }
+    if (a === "party") COMMANDS.party();
+    if (a === "saver") startSaver();
+    if (a === "sound") toggleSound();
+  });
+  addEventListener("keydown", e => { if (e.key === "Escape") closeStart(); });
+  setInterval(() => { const d = new Date(); $("tb-clock").textContent = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`; }, 1000);
+
+  $("wired-btn").addEventListener("click", () => {
+    if (root.dataset.look !== "dark") $("look-btn").click();
+    matrixUntil = performance.now() + 6000; doGlitch(); burst(120, innerWidth / 2, innerHeight / 3);
+  });
+
+  /* ---------- Радио: музыка генерируется на лету ---------- */
+  const CHORDS = [[220, 261.63, 329.63, 392], [174.61, 220, 261.63, 329.63], [261.63, 329.63, 392, 493.88], [196, 246.94, 293.66, 392]];
+  const CHORD_NAMES = ["Am7", "Fmaj7", "Cmaj7", "G"];
+  let radioOn = false, radioTimer, radioNext = 0, radioBeat = 0, radioBar = 0, rain = null, radioGain = null;
+  function rOsc(type, freq, t, dur, peak, attack, dest, detune = 0) {
+    const o = ac.createOscillator(), gn = ac.createGain();
+    o.type = type; o.frequency.value = freq; o.detune.value = detune;
+    gn.gain.setValueAtTime(.0001, t); gn.gain.linearRampToValueAtTime(peak, t + attack); gn.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(gn).connect(dest); o.start(t); o.stop(t + dur + .05);
+  }
+  function rNoise(t, freq, peak, len) {
+    const src = ac.createBufferSource(), f = ac.createBiquadFilter(), gn = ac.createGain();
+    src.buffer = noiseBuf; f.type = "highpass"; f.frequency.value = freq; env(gn, t, peak, len);
+    src.connect(f).connect(gn).connect(radioGain); src.start(t, Math.random() * .5); src.stop(t + len);
+  }
+  function rKick(t) {
+    const o = ac.createOscillator(), gn = ac.createGain();
+    o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(45, t + .1); env(gn, t, .45, .28);
+    o.connect(gn).connect(radioGain); o.start(t); o.stop(t + .3);
+  }
+  function playChord(ch, t, len, st) {
+    if (st === "ambient") {
+      const f = ac.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 900; f.connect(radioGain);
+      ch.forEach(fr => { rOsc("sawtooth", fr, t, len + 1.2, .016, 1.4, f, -8); rOsc("sawtooth", fr, t, len + 1.2, .016, 1.4, f, 8); });
+      rOsc("sine", ch[0] / 2, t, len + .8, .06, .4, radioGain);
+      if (Math.random() < .6) rOsc("triangle", ch[3] * 2, t + rnd(0, len * .7), 1.6, .02, .01, radioGain);
+    } else {
+      ch.forEach(fr => { rOsc("triangle", fr, t, len * .95, .03, .02, radioGain); rOsc("sine", fr * 2, t, len * .6, .008, .02, radioGain); });
+      rOsc("sine", ch[0] / 2, t, len * .45, .09, .02, radioGain);
+      rOsc("sine", ch[0] / 2, t + len / 2, len * .45, .08, .02, radioGain);
+    }
+  }
+  function lofiDrums(t, b, L) {
+    if (b === 0 || b === 2) rKick(t);
+    if (b === 1) rKick(t + L * .6);
+    if (b === 1 || b === 3) rNoise(t, 1500, .16, .15);
+    rNoise(t, 7000, .05, .04); rNoise(t + L * .6, 7000, .035, .03);
+    if (Math.random() < .7) rNoise(t + rnd(0, L), 3000, .05, .006);
+  }
+  function radioTick() {
+    const st = $("station").value, L = st === "lofi" ? 60 / 80 : 1;
+    while (radioNext < ac.currentTime + .3) {
+      const b = radioBeat % 4;
+      if (b === 0) {
+        const i = radioBar % 4, when = radioNext;
+        playChord(CHORDS[i], when, L * 4, st);
+        setTimeout(() => { if (radioOn) $("now").innerHTML = `сейчас: <b>${st === "lofi" ? "lofi ночь" : "lain ambient"}</b> ✦ аккорд ${CHORD_NAMES[i]}`; }, Math.max(0, (when - ac.currentTime) * 1000));
+        radioBar++;
+      }
+      if (st === "lofi") lofiDrums(radioNext, b, L);
+      radioNext += L; radioBeat++;
+    }
+  }
+  function startRain() {
+    const src = ac.createBufferSource(), f = ac.createBiquadFilter(), gn = ac.createGain();
+    src.buffer = noiseBuf; src.loop = true; f.type = "bandpass"; f.frequency.value = 1500; f.Q.value = .7;
+    gn.gain.value = $("station").value === "lofi" ? .01 : .025;
+    src.connect(f).connect(gn).connect(radioGain); src.start(); rain = src;
+  }
+  function toggleRadio(force) {
+    const on = force === undefined ? !radioOn : force;
+    if (on === radioOn) return;
+    radioOn = on; $("radio-play").textContent = on ? "■ стоп" : "▶ слушать";
+    if (on) {
+      const a = audioCtx();
+      radioGain = a.createGain(); radioGain.gain.value = $("vol").value / 100; radioGain.connect(bus);
+      radioNext = a.currentTime + .1; radioBeat = 0; radioBar = 0;
+      startRain(); radioTimer = setInterval(radioTick, 50); radioTick();
+      vizLoop(); unlock("radio");
+    } else {
+      clearInterval(radioTimer);
+      if (rain) { rain.stop(); rain = null; }
+      if (radioGain) { const old = radioGain; old.gain.setTargetAtTime(0, ac.currentTime, .3); setTimeout(() => old.disconnect(), 2000); }
+      radioGain = null; $("now").textContent = "сейчас: тишина";
+    }
+  }
+  $("radio-play").addEventListener("click", () => toggleRadio());
+  $("vol").addEventListener("input", e => { if (radioGain) radioGain.gain.value = e.target.value / 100; });
+  $("station").addEventListener("change", () => { if (radioOn) { toggleRadio(false); toggleRadio(true); } });
+
+  // визуализатор: столбики по частотам всего, что играет
+  const viz = $("viz"), vctx = viz.getContext("2d");
+  let vizRunning = false;
+  function vizSize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2), w = viz.clientWidth, h = viz.clientHeight;
+    if (viz.width !== Math.round(w * dpr)) { viz.width = Math.round(w * dpr); viz.height = Math.round(h * dpr); }
+    vctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return [w, h];
+  }
+  function vizIdle() {
+    const [w, h] = vizSize(); vctx.clearRect(0, 0, w, h);
+    vctx.globalAlpha = .45; vctx.fillStyle = C.accent;
+    for (let x = 0; x < w; x += 8) vctx.fillRect(x, h / 2, 4, 1);
+    vctx.globalAlpha = 1;
+  }
+  function vizFrame() {
+    const [w, h] = vizSize(); vctx.clearRect(0, 0, w, h);
+    if (analyser) {
+      const d = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(d);
+      const n = 40, bw = w / n;
+      for (let i = 0; i < n; i++) {
+        const v = d[Math.floor(i * d.length * .8 / n)] / 255, bh = Math.max(2, v * h * .95);
+        vctx.globalAlpha = .35 + .65 * v; vctx.fillStyle = i % 7 === 0 ? C.accent2 : C.accent;
+        vctx.fillRect(i * bw + 1, h - bh, bw - 2, bh);
+      }
+      vctx.globalAlpha = 1;
+    }
+    if (radioOn || seqPlaying) requestAnimationFrame(vizFrame);
+    else { vizRunning = false; vizIdle(); }
+  }
+  function vizLoop() { if (vizRunning) return; vizRunning = true; requestAnimationFrame(vizFrame); }
+
+  /* ---------- Ближайший праздник ---------- */
+  function renderNextHoliday() {
+    let best = null;
+    for (const [n, m, d] of [["новый год", 1, 1], ["14 февраля", 2, 14], ["8 марта", 3, 8], ["1 апреля", 4, 1], ["хэллоуин", 10, 31]]) {
+      const k = daysTo(m, d); if (!best || k < best[1]) best = [n, k];
+    }
+    $("next-hol").textContent = best[1] === 0 ? `${best[0]}, сегодня!` : `${best[0]} через ${best[1]} ${plural(best[1], "день", "дня", "дней")}`;
+  }
+
+  // старт
+  const hostTheme = root.getAttribute("data-theme");
+  // без сохранённого выбора тема зависит от времени суток: с 20:00 до 7:00 ночь
+  const hourNow = new Date().getHours();
+  setLook(store.get("ofcicon-look") || (hostTheme === "light" || hostTheme === "dark" ? hostTheme : hourNow >= 20 || hourNow < 7 ? "dark" : "light"));
+  applyNick(); renderNextHoliday();
+  const forced = location.hash.slice(1);
+  if (MODES[forced]) modeSel.value = forced;
+  apply(MODES[forced] ? forced : autoMode());
+  if (!reduced) requestAnimationFrame(frame);
+  renderTaskbar(); requestAnimationFrame(vizIdle);
+  unlock("first");
+  if (hourNow < 5) unlock("night");
+
+  let skipped = false; try { skipped = sessionStorage.getItem("ofcicon-skip") === "1"; } catch (e) {}
+  if (!getBday() && !skipped) setTimeout(openModal, 700);
+</script>
+</body>
+</html>
