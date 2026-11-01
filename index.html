@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ofcicon</title>
-<meta name="description" content="биты / монтаж / игры ✦ ссылки, бит-машина, радио, мини-игра и скрытая комната">
+<meta name="description" content="биты / монтаж / игры ✦ ссылки, бит-машина, радио, мини-игра, питомец и скрытая комната">
 <meta name="theme-color" content="#05070a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2305070a'/%3E%3Cg fill='%235cff8a'%3E%3Crect x='7' y='0' width='2' height='2'/%3E%3Crect x='3' y='2' width='10' height='9'/%3E%3Crect x='2' y='4' width='12' height='5'/%3E%3Crect x='3' y='11' width='2' height='2'/%3E%3Crect x='7' y='11' width='2' height='2'/%3E%3Crect x='11' y='11' width='2' height='2'/%3E%3C/g%3E%3Cg fill='%2305070a'%3E%3Crect x='5' y='5' width='2' height='3'/%3E%3Crect x='9' y='5' width='2' height='3'/%3E%3Crect x='7' y='9' width='2' height='1'/%3E%3C/g%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ofcicon.github.io/">
 <meta property="og:title" content="ofcicon">
-<meta property="og:description" content="биты / монтаж / игры ✦ ссылки, бит-машина, радио, мини-игра и скрытая комната">
+<meta property="og:description" content="биты / монтаж / игры ✦ ссылки, бит-машина, радио, мини-игра, питомец и скрытая комната">
 <meta property="og:image" content="https://ofcicon.github.io/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -564,6 +564,25 @@
     </div>
   </section>
 
+  <section class="win" id="bitpet">
+    <div class="bar"><span><b>▮</b> zhivoy-bit.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
+    <div class="win-body">
+      <h2>живой бит</h2>
+      <div style="display:flex;gap:16px;align-items:center">
+        <svg viewBox="0 0 8 7" width="64" height="56" shape-rendering="crispEdges" style="flex:none" aria-hidden="true">
+          <g fill="var(--accent)"><rect x="2" y="0" width="4" height="1"/><rect x="1" y="1" width="6" height="1"/><rect x="0" y="2" width="8" height="3"/><rect x="1" y="5" width="6" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/></g>
+          <g fill="var(--bg)"><rect x="1" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="3" y="4" width="2" height="1"/></g>
+        </svg>
+        <p class="muted" style="margin:0;min-width:0">Карманный цифровой питомец. Корми, играй, укладывай спать и лечи от вирусов. Он растёт от одного бита до гигабайта, а время идёт, даже когда ты не в сети.</p>
+      </div>
+      <div class="seq-ctl">
+        <a class="tbtn primary" href="pet/" style="text-decoration:none">▶ играть на сайте</a>
+        <a class="tbtn" href="pet/ZhivoyBit.exe" download style="text-decoration:none">↓ скачать для ПК</a>
+      </div>
+      <p class="muted" style="margin:0">С телефона открывается прямо на сайте, его можно добавить на главный экран. Версия для ПК работает на Windows 10 и 11 и не требует установки. Windows может предупредить о неизвестном издателе: нажми «Подробнее», затем «Выполнить в любом случае».</p>
+    </div>
+  </section>
+
   <section class="win" id="achievements">
     <div class="bar"><span><b>▮</b> achievements.exe</span><span class="ctl" aria-hidden="true">[_] [□] [x]</span></div>
     <div class="win-body">
@@ -1103,6 +1122,7 @@
       "glitch ...... сломать сайт (ненадолго)",
       "game ........ мини-игра «лови пакеты»",
       "pet ......... позвать navi",
+      "bit ......... питомец «живой бит»",
       "screensaver . включить заставку",
       "radio ....... включить радио",
       "name [ник] .. представиться",
@@ -1139,6 +1159,7 @@
     clear: () => { term.innerHTML = ""; },
     game: () => { $("game").scrollIntoView({ behavior: reduced ? "auto" : "smooth" }); gStart(); print("packet.exe запущен"); },
     pet: () => { petTalk(); print("navi: я тут, справа внизу"); },
+    bit: () => { openWin("bitpet"); print("живой бит: играй на сайте или скачай для ПК"); },
     screensaver: () => { startSaver(); print("заставка включена"); },
     radio: () => { openWin("radio"); toggleRadio(true); print("радио включено ♪"); },
     name: (a, raw) => {
@@ -1537,7 +1558,7 @@
 
   /* ---------- Окна и панель задач ---------- */
   const WIN_TITLES = {
-    links: "links.url", terminal: "terminal.exe", beat: "beatbox.exe", radio: "radio.exe", game: "packet.exe",
+    links: "links.url", terminal: "terminal.exe", beat: "beatbox.exe", radio: "radio.exe", game: "packet.exe", bitpet: "zhivoy-bit.exe",
     achievements: "achievements.exe", secret: "secret.exe", birthday: "birthday.exe", status: "status",
   };
   let closed = {};

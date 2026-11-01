@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Живой Бит</title>
+<meta name="description" content="Карманный цифровой питомец: корми, играй, лечи и смотри, как он растёт от одного бита до гигабайта.">
+<link rel="icon" href="icon-192.png">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; font: 14px system-ui, sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Major+Mono+Display&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+  /* Layout: one pocket gadget in smoked see-through plastic. Screen on top, controls below, every choice opens as a drawer over the controls so the pet stays visible. */
+  :root {
+    color-scheme: dark;
+    --bg: #05070a;
+    --case: #10171a;
+    --case-2: #1b2529;
+    --edge: #2d3b40;
+    --ink: #c9d6cf;
+    --muted: #84978e;
+    --screen: #040a07;
+    --p: #5cff8a;
+    --p-bright: #d2ffdf;
+    --p-dim: #2c7a48;
+    --p-faint: #113022;
+    --sig: #ff4d7d;
+    --gold: #ffc34d;
+    --f-pixel: "Pixelify Sans", "IBM Plex Mono", ui-monospace, monospace;
+    --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    --f-logo: "Major Mono Display", "IBM Plex Mono", monospace;
+  }
+  :root[data-phos="amber"]  { --screen: #0a0703; --p: #ffb347; --p-bright: #ffe7c4; --p-dim: #8a5a1c; --p-faint: #33200a; }
+  :root[data-phos="ice"]    { --screen: #03090b; --p: #5ce1ff; --p-bright: #d6f7ff; --p-dim: #1f6f87; --p-faint: #0c2b35; }
+  :root[data-phos="violet"] { --screen: #07050d; --p: #b69bff; --p-bright: #ece5ff; --p-dim: #5a459e; --p-faint: #211a3d; }
+
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; background: var(--bg); }
+  body { margin: 0; color: var(--ink); font: 400 13px/1.45 var(--f-mono); -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }
+  button { font: inherit; color: inherit; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--p-bright); outline-offset: 2px; }
+
+  #field { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  .stage {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    padding-block: 18px 22px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .device {
+    position: relative;
+    width: 100%; max-width: 410px;
+    padding: 12px 14px 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    border: 1px solid var(--edge);
+    border-radius: 22px 22px 34px 34px;
+    background:
+      linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,0) 26%, rgba(255,255,255,0) 72%, rgba(255,255,255,.04)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' fill='none' stroke='%239fc4b0' stroke-opacity='.11'%3E%3Cpath d='M0 20h34l12 12h30l10-10h34M0 72h18l14 14h44M60 0v18l14 14v30l-14 14v44M104 120V92L88 76H76'/%3E%3Ccircle cx='76' cy='86' r='3'/%3E%3Ccircle cx='46' cy='32' r='3'/%3E%3Ccircle cx='104' cy='92' r='3'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, var(--case-2), var(--case));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 -3px 0 rgba(0,0,0,.45), 0 22px 60px rgba(0,0,0,.7);
+  }
+
+  .brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 32px; }
+  #logo {
+    background: none; border: 0; padding: 0; cursor: pointer; text-align: left; line-height: 1.05;
+    font: 700 19px/1.05 var(--f-pixel); color: var(--p-bright); letter-spacing: .02em;
+    text-shadow: 1px 0 var(--sig), -1px 0 var(--p-dim);
+  }
+  #logo small { display: block; font: 400 9px/1.3 var(--f-logo); color: var(--muted); letter-spacing: .06em; text-shadow: none; }
+  .brand-right { display: flex; align-items: center; gap: 10px; }
+  .leds { display: flex; gap: 6px; }
+  .led { width: 7px; height: 7px; border-radius: 50%; background: var(--p-faint); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+  .led.on { background: var(--p); box-shadow: 0 0 6px var(--p); }
+  .led.alert.on { background: var(--sig); box-shadow: 0 0 8px var(--sig); animation: blink 1s steps(2) infinite; }
+  #menu-btn {
+    min-height: 32px; padding: 0 10px; cursor: pointer;
+    font: 500 12px var(--f-pixel); letter-spacing: .08em; color: var(--ink);
+    background: var(--case); border: 1px solid var(--edge); border-radius: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 2px 0 rgba(0,0,0,.6);
+  }
+  #menu-btn:active { transform: translateY(1px); box-shadow: none; }
+
+  .crt {
+    position: relative; overflow: hidden;
+    border-radius: 12px;
+    border: 3px solid #05080a;
+    outline: 1px solid var(--edge);
+    background: var(--screen);
+  }
+  .hud {
+    display: flex; justify-content: space-between; gap: 8px;
+    padding: 5px 9px;
+    font: 500 12px/1.2 var(--f-pixel); letter-spacing: .05em; color: var(--p);
+    background: var(--screen); border-bottom: 1px solid var(--p-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .hud span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #hud-right { flex: none; }
+  #scene { display: block; width: 100%; image-rendering: pixelated; cursor: pointer; touch-action: manipulation; }
+  body.playing #scene { touch-action: none; }
+  .crt::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0,.26) 0 1px, transparent 1px 3px);
+    box-shadow: inset 0 0 34px rgba(0,0,0,.65);
+  }
+  :root[data-scan="off"] .crt::after { background: none; }
+  .crt.off #scene { animation: crt-off .5s forwards; }
+  #bubble {
+    position: absolute; top: 32px; left: 50%; transform: translateX(-50%); z-index: 2;
+    max-width: 78%; width: max-content;
+    padding: 3px 8px; border: 1px solid var(--p); border-radius: 3px;
+    background: var(--screen); color: var(--p-bright);
+    font: 500 12px/1.3 var(--f-mono); text-align: center;
+    pointer-events: none;
+  }
+  #game-hud {
+    position: absolute; top: 28px; left: 0; right: 0; z-index: 2;
+    display: flex; justify-content: space-between; padding: 2px 9px;
+    font: 500 12px var(--f-pixel); color: var(--p-bright); pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .controls { position: relative; display: flex; flex-direction: column; gap: 9px; }
+  #status {
+    margin: 0; min-height: 2.9em;
+    font-size: 12.5px; line-height: 1.45; color: var(--ink);
+  }
+
+  .track-row { display: flex; align-items: center; gap: 6px; }
+  .track { flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; font: 500 11px var(--f-pixel); color: var(--muted); letter-spacing: .04em; }
+  .track li { flex: 1; text-align: center; padding: 2px 0; border-bottom: 2px solid var(--edge); }
+  .track li.done { color: var(--p-dim); border-color: var(--p-dim); }
+  .track li.now { color: var(--p-bright); border-color: var(--p); }
+  #next { flex: none; font: 400 11px var(--f-mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .meters { display: grid; gap: 5px; margin: 0; }
+  .meter { display: grid; grid-template-columns: 86px minmax(0, 1fr) 26px; align-items: center; gap: 8px; }
+  .meter dt { font: 500 11.5px var(--f-pixel); letter-spacing: .05em; color: var(--muted); }
+  .meter dd { margin: 0; }
+  .meter .val { text-align: right; font-size: 11.5px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .bar { height: 10px; background: repeating-linear-gradient(90deg, var(--p-faint) 0 7px, transparent 7px 9px); }
+  .bar i { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--p) 0 7px, transparent 7px 9px); transition: width .4s steps(6); }
+  .meter.low .bar i { background: repeating-linear-gradient(90deg, var(--gold) 0 7px, transparent 7px 9px); }
+  .meter.crit .bar i { background: repeating-linear-gradient(90deg, var(--sig) 0 7px, transparent 7px 9px); animation: blink 1s steps(2) infinite; }
+  .meter.crit dt { color: var(--sig); }
+
+  .keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .key {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    min-height: 58px; padding: 7px 4px 6px; cursor: pointer;
+    font: 700 13px/1 var(--f-pixel); letter-spacing: .05em; color: var(--p-bright);
+    background: linear-gradient(180deg, #232f33, #141c1f);
+    border: 1px solid #000; border-radius: 10px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 3px 0 #000;
+    touch-action: manipulation;
+  }
+  .key:active:not(:disabled) { transform: translateY(2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 #000; }
+  .key:disabled { color: var(--muted); cursor: not-allowed; opacity: .55; }
+  .key canvas { width: 21px; height: 21px; image-rendering: pixelated; }
+  .key .num { position: absolute; top: 4px; left: 7px; font: 400 10px var(--f-mono); color: var(--muted); }
+  .key.need::after {
+    content: ""; position: absolute; top: 6px; right: 7px; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--sig); box-shadow: 0 0 7px var(--sig); animation: blink 1s steps(2) infinite;
+  }
+
+  #drawer {
+    position: absolute; inset: 0; z-index: 3; overflow-y: auto; min-height: 100%;
+    display: flex; flex-direction: column; gap: 9px;
+    padding: 11px 12px;
+    background: var(--screen); border: 1px solid var(--p-dim); border-radius: 10px;
+    animation: rise .14s steps(3);
+  }
+  .d-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .d-title { margin: 0; font: 700 15px/1.2 var(--f-pixel); letter-spacing: .04em; color: var(--p-bright); text-wrap: balance; }
+  .d-close { flex: none; width: 32px; height: 32px; margin: -5px -5px 0 0; cursor: pointer; background: none; border: 1px solid var(--p-dim); border-radius: 6px; color: var(--p); font: 500 15px/1 var(--f-mono); }
+  .d-text { margin: 0; font-size: 12.5px; color: var(--ink); }
+  .d-lines { margin: 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--ink); display: grid; gap: 2px; }
+  .d-lines li::before { content: "› "; color: var(--p); }
+  .opts { display: grid; gap: 7px; }
+  .opts.two { grid-template-columns: 1fr 1fr; }
+  .opt {
+    display: grid; align-content: center; gap: 1px; min-height: 42px; padding: 7px 10px; cursor: pointer; text-align: left;
+    background: transparent; border: 1px solid var(--p-dim); border-radius: 7px; color: var(--p-bright);
+    font: 700 14px/1.2 var(--f-pixel); letter-spacing: .03em;
+  }
+  .opt small { font: 400 11.5px/1.3 var(--f-mono); color: var(--muted); letter-spacing: 0; }
+  .opt:hover:not(:disabled) { background: var(--p-faint); }
+  .opt.primary { background: var(--p); border-color: var(--p); color: var(--screen); }
+  .opt.primary small { color: var(--screen); }
+  .opt.primary:hover { background: var(--p-bright); }
+  .opt.big { font-size: 28px; text-align: center; min-height: 66px; }
+  .opt:disabled { opacity: .45; cursor: not-allowed; }
+  .d-sect { display: grid; gap: 6px; }
+  .d-sect + .d-sect { padding-top: 9px; border-top: 1px dashed var(--p-faint); }
+  .d-label { margin: 0; font: 500 11.5px var(--f-pixel); letter-spacing: .06em; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { min-height: 32px; padding: 3px 10px; cursor: pointer; background: transparent; border: 1px solid var(--p-dim); border-radius: 6px; color: var(--ink); font-size: 12px; }
+  .chip[aria-pressed="true"] { background: var(--p); border-color: var(--p); color: var(--screen); font-weight: 500; }
+  .field {
+    width: 100%; padding: 8px 10px; background: #000; color: var(--p-bright);
+    border: 1px solid var(--p-dim); border-radius: 6px; font: 500 16px var(--f-mono);
+  }
+  textarea.field { font-size: 11px; height: 62px; resize: vertical; word-break: break-all; }
+  .rows { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .row { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 9px; align-items: center; font-size: 12px; color: var(--muted); }
+  .row b { display: block; font: 700 13px/1.2 var(--f-pixel); color: var(--p-bright); letter-spacing: .03em; }
+  .row canvas { width: 34px; height: 34px; image-rendering: pixelated; background: #000; border-radius: 4px; }
+  .ach { font-size: 12px; color: var(--muted); }
+  .ach b { display: block; font: 700 13px/1.2 var(--f-pixel); color: var(--p-bright); letter-spacing: .03em; }
+  .ach.locked b { color: var(--muted); }
+
+  .foot { position: relative; max-width: 410px; margin: 0; font-size: 12px; color: var(--muted); text-align: center; text-wrap: balance; }
+
+  @keyframes blink { 50% { opacity: .35; } }
+  @keyframes rise { from { transform: translateY(8px); } }
+  @keyframes crt-off { 60% { transform: scaleY(.02); filter: brightness(4); } 100% { transform: scale(0, .02); filter: brightness(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .led.alert.on, .key.need::after, .meter.crit .bar i { animation: none; }
+    #drawer { animation: none; }
+    .bar i { transition: none; }
+  }
+</style>
+<style>
+  .foot a, .foot button { color: var(--p); background: none; border: 0; padding: 0; font: inherit; text-decoration: underline; cursor: pointer; }
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#05070a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Живой Бит">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+<canvas id="field" aria-hidden="true"></canvas>
+
+<main class="stage">
+  <section class="device" id="device" aria-label="Карманное устройство с питомцем">
+    <div class="brand">
+      <button id="logo" type="button" aria-label="Живой Бит">живой бит<small>live.bit / модель 01</small></button>
+      <div class="brand-right">
+        <div class="leds" aria-hidden="true">
+          <span class="led on" title="питание"></span>
+          <span class="led" id="led-hdd"></span>
+          <span class="led alert" id="led-alert"></span>
+        </div>
+        <button id="menu-btn" type="button">МЕНЮ</button>
+      </div>
+    </div>
+
+    <div class="crt" id="crt">
+      <div class="hud"><span id="hud-left"></span><span id="hud-right"></span></div>
+      <canvas id="scene" role="img" aria-label="Экран с питомцем"></canvas>
+      <div id="bubble" aria-live="polite" hidden></div>
+      <div id="game-hud" hidden><span id="game-score"></span><span id="game-time"></span></div>
+    </div>
+
+    <div class="controls">
+      <p id="status" aria-live="polite"></p>
+      <div class="track-row"><ol class="track" id="track" aria-label="Стадии роста"></ol><span id="next"></span></div>
+      <dl class="meters" id="meters"></dl>
+      <div class="keys" id="keys"></div>
+      <div id="drawer" hidden></div>
+    </div>
+  </section>
+  <p class="foot">Питомец живёт на этом устройстве. Время идёт, даже когда сайт закрыт, так что заглядывай пару раз в день.<br>
+    <a href="../">← на сайт ofcicon</a> · <a href="ZhivoyBit.exe" download>скачать для ПК</a><span id="install-wrap" hidden> · <button type="button" id="install">установить</button></span></p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const MIN = 60000, HOUR = 3600000, DAY = 24 * HOUR;
+  const clamp = (v, a = 0, b = 100) => Math.max(a, Math.min(b, v));
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- сохранение ---------- */
+  const KEY = 'zhivoy-bit.save.v1', MKEY = 'zhivoy-bit.meta.v1';
+  function load(k) { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+  function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+
+  const meta = Object.assign({ archive: [], ach: {}, phos: 'green', sound: true, scan: true, hat: 'auto' }, load(MKEY) || {});
+
+  function newPet() {
+    const now = Date.now();
+    return {
+      v: 1, name: '', born: now, last: now, stage: 0, form: null, hatch: 0, age: 0,
+      full: 75, mood: 75, energy: 80, clean: 100, health: 100, weight: 8,
+      asleep: false, sick: false, trash: [], digest: 0,
+      careSum: 0, careTime: 0, misses: 0, flags: {},
+      cookies: 0, spaghetti: 0, games: 0, pets: 0, backupUsed: false,
+      dead: false, ended: null, needName: false, lastSeen: now
+    };
+  }
+  let st = load(KEY);
+  if (!st || st.v !== 1) st = newPet();
+  function save() {
+    st.lastSeen = Date.now();
+    store(KEY, st); store(MKEY, meta);
+    const led = $('#led-hdd'); led.classList.add('on'); setTimeout(() => led.classList.remove('on'), 180);
+  }
+
+  /* ---------- мир: стадии, формы, финалы ---------- */
+  const STAGES = [
+    { label: 'ПАКЕТ', until: 0, rate: 0 },
+    { label: 'БИТ', short: 'БИТ', until: 30 * MIN, rate: 1.5 },
+    { label: 'БАЙТ', short: 'БАЙТ', until: 4 * HOUR, rate: 1.25 },
+    { label: 'КИЛОБАЙТ', short: 'КБ', until: 16 * HOUR, rate: 1.1 },
+    { label: 'МЕГАБАЙТ', short: 'МБ', until: 72 * HOUR, rate: 1 },
+    { label: 'ГИГАБАЙТ', short: 'ГБ', until: 168 * HOUR, rate: 0.85 }
+  ];
+  const FORM_LABEL = { file: 'ФАЙЛ', demon: 'ДЕМОН', fat: 'ТОЛСТЫЙ КЭШ', glitch: 'ГЛЮК', ghost: 'ПРИЗРАК' };
+  const ENDINGS = {
+    ghost: { title: 'Призрак Сети', text: n => `${n} вырос без единого сбоя и растворился в проводах. Теперь его видно только краем глаза, когда экран гаснет. Это самый редкий финал.` },
+    keeper: { title: 'Хранитель системы', text: n => `${n} стал добрым фоновым демоном. Он остался сторожить твой компьютер и по ночам тихо перекладывает файлы по местам.` },
+    archivist: { title: 'Архивариус', text: n => `${n} прожил спокойную жизнь и ушёл работать в большой архив. Он помнит всё, что ты для него делал, с точностью до байта.` },
+    overflow: { title: 'Переполненный диск', text: n => `${n} съел столько cookie, что перестал помещаться на диске. Его последние слова: «ещё один влезет».` },
+    legend: { title: 'Легендарный баг', text: n => `${n} рос как придётся и стал багом, который никто не может починить. Программисты рассказывают о нём страшные истории.` },
+    crash: { title: 'Критический сбой', text: n => `${n} не дождался помощи. Процесс не отвечает.` }
+  };
+
+  function careScore() { return st.careTime > 0 ? st.careSum / st.careTime : 75; }
+  function chooseForm() {
+    const s = careScore();
+    if (s < 45 || st.misses >= 8) return 'glitch';
+    if (st.cookies >= 12 || st.weight >= 160) return 'fat';
+    if (s >= 72) return 'demon';
+    return 'file';
+  }
+  const ENDING_BY_FORM = { ghost: 'ghost', demon: 'keeper', file: 'archivist', fat: 'overflow', glitch: 'legend' };
+
+  /* ---------- время ---------- */
+  function step(h, ts, ev) {
+    if (st.dead || st.ended) return;
+    if (st.stage === 0) {
+      st.hatch = clamp(st.hatch + h * HOUR / 400);
+      if (st.hatch >= 100) hatch(ev);
+      return;
+    }
+    const m = STAGES[st.stage].rate;
+    const hour = new Date(ts).getHours();
+    if (st.asleep) {
+      st.full -= 4 * m * h;
+      st.mood -= 1 * h;
+      st.energy += 24 * h;
+      if (st.energy >= 100) { st.energy = 100; st.asleep = false; ev.push(`${st.name} выспался.`); }
+    } else {
+      st.full -= 9 * m * h;
+      st.mood -= (6 * m + (st.full < 25 ? 4 : 0) + (st.sick ? 6 : 0) + (st.clean < 25 ? 3 : 0)) * h;
+      st.energy -= 7 * m * h * (hour < 6 ? 1.4 : 1);
+      st.digest += 0.35 * h;
+      if (st.energy <= 6 || (hour < 6 && st.energy < 45)) { st.asleep = true; ev.push(`${st.name} сам уснул.`); }
+      if (st.digest >= 1 && st.trash.length < 8) {
+        st.digest = 0;
+        st.trash.push({ x: rnd(0.08, 0.92) });
+        ev.push(`${st.name} насорил: на полу новый мусорный файл.`);
+      }
+    }
+    st.clean -= (2 + 2.5 * st.trash.length) * h;
+    let hp = 0;
+    if (st.sick) hp -= 6;
+    if (st.full <= 10) hp -= 2.5;
+    if (st.mood <= 10) hp -= 2.5;
+    if (st.clean <= 10) hp -= 2.5;
+    if (hp === 0 && st.full > 40 && st.clean > 40) hp = 3;
+    st.health += hp * h;
+
+    if (!st.sick) {
+      const risk = 0.012 + (st.clean < 35 ? 0.12 : 0) + (st.health < 35 ? 0.1 : 0);
+      if (Math.random() < risk * h) { st.sick = true; ev.push(`${st.name} подхватил вирус.`); }
+    }
+    for (const k of ['full', 'mood', 'energy', 'clean', 'health']) st[k] = clamp(st[k]);
+    for (const k of ['full', 'mood', 'clean', 'health']) {
+      if (st[k] < 10 && !st.flags[k]) { st.flags[k] = true; st.misses++; }
+      if (st[k] > 30) st.flags[k] = false;
+    }
+    st.weight = Math.max(4 + st.stage * 6, st.weight - 0.4 * h);
+    st.careSum += (st.full + st.mood + st.energy + st.clean + st.health) / 5 * h;
+    st.careTime += h;
+    st.age += h * HOUR;
+
+    if (st.health <= 0) {
+      st.dead = true; st.asleep = false;
+      ev.push(`${st.name}: критический сбой.`);
+      return;
+    }
+    const cur = STAGES[st.stage];
+    if (st.age >= cur.until) {
+      if (st.stage < 5) evolve(ev);
+      else { st.ended = ENDING_BY_FORM[st.form] || 'archivist'; ev.push(`${st.name} завершил путь.`); }
+    }
+  }
+  function simulate(ms, ts, ev) {
+    let left = ms;
+    while (left > 0 && !st.dead && !st.ended) {
+      const d = Math.min(left, MIN);
+      step(d / HOUR, ts - left, ev);
+      left -= d;
+    }
+  }
+  function hatch(ev) {
+    st.stage = 1; st.age = 0; st.needName = !st.name;
+    if (!st.name) st.name = 'Питомец';
+    ev.push('Пакет распакован.');
+    unlock('hatch');
+    fx.pop = true;
+  }
+  function evolve(ev) {
+    st.stage++;
+    if (st.stage === 4) st.form = chooseForm();
+    if (st.stage === 5 && careScore() >= 88 && st.misses === 0) st.form = 'ghost';
+    const form = st.stage >= 4 ? ` Форма: ${FORM_LABEL[st.form].toLowerCase()}.` : '';
+    ev.push(`${st.name} вырос до стадии «${STAGES[st.stage].label.toLowerCase()}».${form}`);
+    fx.pop = true;
+  }
+
+  /* ---------- находки ---------- */
+  const ACH = [
+    ['hatch', 'Пакет принят', 'Распаковать первого питомца'],
+    ['cookie', 'Cookie-монстр', 'Скормить 10 cookie одному питомцу'],
+    ['spaghetti', 'Спагетти-баг', 'Подхватить вирус от спагетти-кода'],
+    ['catch', 'Без единого вируса', 'Пройти «Лови биты» и не поймать вирус'],
+    ['annoy', 'Хватит тыкать', 'Достать питомца лаской'],
+    ['back', 'Вернулся', 'Прийти после суток отсутствия'],
+    ['night', '03:33', 'Заглянуть в 03:33 ночи'],
+    ['konami', 'Вверх-вверх-вниз-вниз', 'Ввести старый код на клавиатуре'],
+    ['logo', 'Семь нажатий', 'Нажать на логотип 7 раз'],
+    ['creator', 'Создатель', 'Назвать питомца секретным именем'],
+    ['speed', 'Разгон', 'Ускорить время'],
+    ['ending', 'Полный цикл', 'Довести питомца до финала'],
+    ['ghost', 'Призрак Сети', 'Получить самый редкий финал']
+  ];
+  function unlock(id) {
+    if (meta.ach[id]) return;
+    meta.ach[id] = Date.now();
+    const a = ACH.find(x => x[0] === id);
+    if (a) setTimeout(() => note(`Новая находка: «${a[1]}». Все находки лежат в меню.`), 900);
+    sfx('win');
+  }
+
+  /* ---------- звук ---------- */
+  let ac = null;
+  function audio() {
+    if (!meta.sound) return null;
+    try {
+      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+      return ac;
+    } catch (e) { return null; }
+  }
+  function blip(f, dur, when = 0, type = 'square', vol = 0.05) {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
+    o.connect(g).connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  let userTouched = false;
+  function sfx(n) {
+    if (!userTouched) return;
+    const seq = {
+      key: [[660, .04]], eat: [[330, .06], [392, .06, .08], [494, .08, .16]], happy: [[523, .07], [659, .07, .08], [784, .1, .16]],
+      no: [[196, .12], [165, .16, .12]], clean: [[880, .04], [660, .04, .05], [440, .05, .1]], heal: [[440, .08], [554, .08, .1], [659, .14, .2]],
+      win: [[523, .07], [659, .07, .08], [784, .07, .16], [1047, .16, .24]], evolve: [[262, .09], [330, .09, .1], [392, .09, .2], [523, .09, .3], [784, .22, .4]],
+      bit: [[988, .05]], hit: [[120, .14, 0, 'sawtooth']], dead: [[330, .2], [262, .2, .22], [196, .2, .44], [131, .5, .66]], snore: [[110, .3, 0, 'triangle']]
+    }[n];
+    if (seq) seq.forEach(s => blip(s[0], s[1], s[2] || 0, s[3] || 'square'));
+  }
+
+  /* ---------- пиксели ---------- */
+  function mirror(rows) { return rows.map(r => r + r.split('').reverse().join('')); }
+  function compile(rows, meta2) {
+    const h = rows.length, w = rows[0].length, px = [];
+    const at = (x, y) => (y >= 0 && y < h && x >= 0 && x < w) ? rows[y][x] : '.';
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const c = rows[y][x];
+      if (c === '.') continue;
+      if (c === '#') {
+        const edge = at(x - 1, y) === '.' || at(x + 1, y) === '.' || at(x, y - 1) === '.' || at(x, y + 1) === '.';
+        px.push([x, y, edge ? 'o' : 'f']);
+      } else px.push([x, y, c]);
+    }
+    return Object.assign({ w, h, px }, meta2 || {});
+  }
+  const SPR = {
+    packet: compile([
+      '..##########..', '.##++++++++##.', '##############', '##%%%%%%%%%%##', '##%#%%##%%#%##', '##%%%%%%%%%%##', '##############',
+      '##----------##', '##----##----##', '##----##----##', '##----------##', '##############', '.############.', '..##########..'
+    ]),
+    bit: compile(mirror(['..##', '.###', '####', '####', '####', '.###', '.#..']), { ey: 2, dx: 2, s: 1, my: 4 }),
+    byte: compile(mirror(['..#...', '.##...', '.#####', '######', '######', '######', '######', '######', '.#####', '..####', '..##..']), { ey: 4, dx: 2, s: 2, my: 7 }),
+    kb: compile(mirror(['......+', '......#', '...####', '..#####', '.######', '.######', '.######', '#######', '#.#####', '#.#####', '..#####', '...####', '...##..', '...##..']), { ey: 5, dx: 2, s: 2, my: 8 }),
+    file: compile([
+      '#########.....', '#########+#...', '#########++#..', '#########+++#.', '##############', '##############', '##############', '##############',
+      '##############', '##############', '##############', '##--------####', '##############', '##-------#####', '##############', '.##........##.', '.##........##.'
+    ], { ey: 5, dx: 2, s: 2, my: 8 }),
+    demon: compile(mirror(['..#.....', '..##....', '...##.##', '...#####', '..######', '..######', '..######', '..######', '..######', '...#####', '.#.#####', '.#######', '...#####', '...#####', '...##...']), { ey: 5, dx: 2, s: 2, my: 8 }),
+    fat: compile(mirror(['......####', '....######', '..########', '.#########', '.#########', '##########', '##########', '##########', '##########', '##########', '.#########', '.#########', '..########', '...##.....']), { ey: 4, dx: 3, s: 2, my: 7 }),
+    glitch: compile(mirror(['...#.###', '..######', '..##.###', '.#######', '.#######', '..######', '.###.###', '#.######', '..######', '.##.####', '...#####', '..##.#..', '..#.....']), { ey: 3, dx: 2, s: 2, my: 6, jitter: true }),
+    ghost: compile(mirror(['....###', '..#####', '.######', '.######', '#######', '#######', '#######', '#######', '#######', '#######', '#######', '##.##.#', '#...#..']), { ey: 4, dx: 2, s: 2, my: 7, float: true })
+  };
+  const ICON = {
+    heart: ['.##.##.', '#######', '#######', '.#####.', '..###..', '...#...'],
+    packet: ['#######', '#.....#', '#.###.#', '#.....#', '#.###.#', '#.....#', '#######'],
+    pad: ['.......', '.#####.', '#######', '#.###.#', '#######', '##...##', '.......'],
+    moon: ['..###..', '.##....', '##.....', '##.....', '##....#', '.##..##', '..####.'],
+    cross: ['..###..', '..###..', '#######', '#######', '#######', '..###..', '..###..'],
+    bin: ['.#####.', '#######', '.#.#.#.', '.#.#.#.', '.#.#.#.', '.#.#.#.', '.#####.'],
+    file: ['####..', '#..##.', '#....#', '#.##.#', '#....#', '#.##.#', '######'],
+    virus: ['#.#.#.#', '.#####.', '#.#.#.#', '.#####.', '#.#.#.#'],
+    z: ['####', '..#.', '.#..', '####'],
+    cookie: ['.###.', '#.###', '###.#', '#.###', '.###.'],
+    food: ['#####', '#.#.#', '#####', '#.#.#', '#####'],
+    noodle: ['#.#.#', '#####', '.#.#.', '#.#.#', '.###.'],
+    spark: ['.#.', '###', '.#.'],
+    pumpkin: ['....g....', '...gg....', '.yyyyyyy.', 'yyrryrryy', 'yyyyyyyyy', 'yyryryryy', '.yyyyyyy.'],
+    bat: ['#.......#', '##.#.#.##', '#########', '.##.#.##.'],
+    tree: ['...y...', '...#...', '..###..', '.##r##.', '..###..', '.#y###.', '####r##', '...%...', '...%...'],
+    flower: ['.r.r.', 'rryrr', '.r.r.', '..#..', '.##..', '..#..'],
+    moonBig: ['..www..', '.ww....', 'ww.....', 'ww.....', 'ww....w', '.ww..ww', '..wwww.'],
+    sun: ['..###..', '.#####.', '#######', '#######', '#######', '.#####.', '..###..']
+  };
+  const HAT = {
+    pumpkin: { rows: ['...g...', '.yyyyy.', 'yryyyry', 'yyyyyyy'] },
+    santa: { rows: ['.....w.', '...rrr.', '..rrrr.', '.rrrrr.', 'wwwwwww'] },
+    heart: { rows: ['.r.r.', 'rrrrr', '.rrr.', '..r..'] },
+    flower: { rows: ['.r.r.', 'rryrr', '.r.r.'] },
+    party: { rows: ['...y...', '...r...', '..ryr..', '..yry..', '.rryrr.'] },
+    crown: { rows: ['y..y..y', 'yy.y.yy', 'yyyyyyy', 'yryyyry'] }
+  };
+  const FONT = { '0': ['###', '#.#', '#.#', '#.#', '###'], '1': ['.#.', '##.', '.#.', '.#.', '###'], '!': ['#', '#', '#', '.', '#'] };
+
+  /* ---------- сцена ---------- */
+  const cv = $('#scene'), g = cv.getContext('2d');
+  let W = 110, H = 78, floorY = 66, scale = 3;
+  const C = {};
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = n => cs.getPropertyValue(n).trim();
+    C.bg = v('--screen'); C.p = v('--p'); C.bright = v('--p-bright'); C.dim = v('--p-dim'); C.faint = v('--p-faint'); C.sig = v('--sig'); C.gold = v('--gold');
+  }
+  const KIND = () => ({ o: C.dim, f: C.p, '+': C.bright, '-': C.dim, '%': C.bg, r: C.sig, y: C.gold, g: C.p, w: C.bright });
+  let rain = [];
+  function resize() {
+    const cw = cv.parentElement.clientWidth || 340;
+    scale = Math.max(2, Math.round(cw / 108));
+    W = Math.round(cw / scale); H = Math.round(W * 0.68); floorY = H - 11;
+    cv.width = W; cv.height = H;
+    cv.style.height = Math.round(H / W * cw) + 'px';
+    rain = [];
+    for (let x = 3; x < W; x += 9) rain.push({ x, y: rnd(-H, H), v: rnd(3, 9), d: Math.random() < .5 ? '0' : '1' });
+    if (pet.x > W - 8 || pet.x < 8) pet.x = W / 2;
+  }
+  const rect = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); };
+  function glyph(ch, x, y, c) {
+    const f = FONT[ch]; if (!f) return;
+    g.fillStyle = c;
+    f.forEach((r, j) => { for (let i = 0; i < r.length; i++) if (r[i] === '#') g.fillRect(Math.round(x) + i, Math.round(y) + j, 1, 1); });
+  }
+  function icon(name, x, y, c) {
+    const rows = ICON[name]; if (!rows) return;
+    const k = KIND();
+    rows.forEach((r, j) => {
+      for (let i = 0; i < r.length; i++) {
+        const ch = r[i]; if (ch === '.') continue;
+        g.fillStyle = ch === '#' ? c : k[ch];
+        g.fillRect(Math.round(x) + i, Math.round(y) + j, 1, 1);
+      }
+    });
+  }
+
+  const pet = { x: 55, tx: 55, wait: 1, dir: 1, walk: 0, jump: 0, eat: 0, happy: 0, blink: 3, angry: 0, jit: [], jitT: 0, t: 0 };
+  const fx = { parts: [], flash: 0, pop: false, glitch: 0, matrix: 0, food: null, shake: 0 };
+  function part(name, x, y, c, vx = 0, vy = -10, life = 1) { if (fx.parts.length < 60) fx.parts.push({ name, x, y, c, vx, vy, life, max: life }); }
+  function burst(name, n, c) {
+    const s = sprite();
+    for (let i = 0; i < n; i++) part(name, pet.x + rnd(-s.w / 2, s.w / 2), floorY - s.h + rnd(0, 4), c, rnd(-8, 8), rnd(-18, -8), rnd(.6, 1.2));
+  }
+
+  function sprite() {
+    if (st.stage === 0) return SPR.packet;
+    if (st.stage === 1) return SPR.bit;
+    if (st.stage === 2) return SPR.byte;
+    if (st.stage === 3) return SPR.kb;
+    return SPR[st.form] || SPR.file;
+  }
+  function holiday() {
+    const d = new Date(), m = d.getMonth() + 1, day = d.getDate();
+    if ((m === 10 && day >= 25) || (m === 11 && day <= 2)) return 'halloween';
+    if ((m === 12 && day >= 20) || (m === 1 && day <= 10)) return 'newyear';
+    if (m === 2 && day === 14) return 'valentine';
+    if (m === 3 && day === 8) return 'march8';
+    if (m === 4 && day === 1) return 'april1';
+    return null;
+  }
+  const HOL = holiday();
+  const HOL_HAT = { halloween: 'pumpkin', newyear: 'santa', valentine: 'heart', march8: 'flower' };
+  function currentHat() {
+    if (meta.hat === 'none') return null;
+    if (meta.hat === 'auto') return HOL_HAT[HOL] || null;
+    return meta.hat;
+  }
+
+  function expression() {
+    if (st.dead) return ['x', 'frown'];
+    if (st.asleep) return ['line', 'flat'];
+    if (pet.eat > 0) return ['happy', pet.t % .3 < .15 ? 'open' : 'flat'];
+    if (pet.angry > 0) return ['angry', 'frown'];
+    if (pet.happy > 0) return ['happy', 'smile'];
+    if (st.sick) return ['x', 'frown'];
+    if (pet.blink < .12) return ['line', 'smile'];
+    if (st.mood < 30 || st.full < 20) return ['sad', 'frown'];
+    if (st.energy < 20) return ['line', 'flat'];
+    if (st.mood > 70) return ['open', 'smile'];
+    return ['open', 'flat'];
+  }
+  function drawEye(ex, ey, s, kind, right) {
+    const d = C.bg;
+    if (s === 1) { rect(ex, ey, 1, 1, d); return; }
+    if (kind === 'open') { rect(ex, ey, s, s, d); rect(ex + (right ? 0 : 0), ey, 1, 1, C.bright); }
+    else if (kind === 'line') rect(ex, ey + 1, s, 1, d);
+    else if (kind === 'happy') { rect(ex, ey, s, 1, d); rect(ex - 1, ey + 1, 1, 1, d); rect(ex + s, ey + 1, 1, 1, d); }
+    else if (kind === 'sad') { rect(ex, ey, s, s, d); rect(right ? ex + 1 : ex, ey - 1, 1, 1, d); rect(right ? ex : ex + 1, ey - 2, 1, 1, d); }
+    else if (kind === 'angry') { rect(ex, ey, s, s, d); rect(right ? ex + 1 : ex, ey - 2, 1, 1, d); rect(right ? ex : ex + 1, ey - 1, 1, 1, d); }
+    else if (kind === 'x') { rect(ex - 1, ey - 1, 1, 1, d); rect(ex + 1, ey - 1, 1, 1, d); rect(ex, ey, 1, 1, d); rect(ex - 1, ey + 1, 1, 1, d); rect(ex + 1, ey + 1, 1, 1, d); }
+  }
+  function drawPet() {
+    const s = sprite(), k = KIND();
+    let bob = 0;
+    if (st.stage === 0) bob = Math.sin(pet.t * 5) > .7 ? -1 : 0;
+    else if (st.asleep) bob = Math.sin(pet.t * 1.5) > 0 ? 1 : 0;
+    else if (s.float) bob = Math.round(Math.sin(pet.t * 2) * 2) - 2;
+    else if (Math.abs(pet.x - pet.tx) > 1) bob = Math.floor(pet.t * 6) % 2 ? -1 : 0;
+    const jump = pet.jump > 0 ? Math.round(Math.sin(pet.jump / .4 * Math.PI) * 7) : 0;
+    const shake = st.stage === 0 && st.hatch > 80 ? Math.round(rnd(-1, 1)) : 0;
+    const left = Math.round(pet.x - s.w / 2) + shake, top = floorY - s.h + bob - jump;
+    if (st.stage >= 5) {
+      for (let i = 0; i < 6; i++) {
+        const a = pet.t * 1.2 + i * Math.PI / 3;
+        glyph(i % 2 ? '1' : '0', pet.x + Math.cos(a) * (s.w / 2 + 6) - 1, top + s.h / 2 + Math.sin(a) * 6 - 2, C.dim);
+      }
+    }
+    if (st.form === 'demon' && st.stage >= 4) {
+      const w = Math.floor(pet.t * 3) % 2;
+      rect(left + s.w, floorY - 5 - w, 3, 1, C.dim); rect(left + s.w + 2, floorY - 7 - w, 1, 2, C.dim);
+    }
+    if (s.jitter) { pet.jitT -= .066; if (pet.jitT <= 0) { pet.jitT = rnd(.1, .5); pet.jit = Array.from({ length: s.h }, () => Math.random() < .14 ? (Math.random() < .5 ? -1 : 1) : 0); } }
+    let last = null;
+    for (const p of s.px) {
+      const c = k[p[2]];
+      if (c !== last) { g.fillStyle = c; last = c; }
+      const off = s.jitter ? (pet.jit[p[1]] || 0) : 0;
+      g.fillRect(left + p[0] + off, top + p[1], 1, 1);
+    }
+    if (st.stage === 0) {
+      rect(left, floorY + 3, s.w, 2, C.faint);
+      rect(left, floorY + 3, Math.round(s.w * st.hatch / 100), 2, C.p);
+      return;
+    }
+    const cx = left + s.w / 2;
+    const [eye, mouth] = expression();
+    const ey = top + s.ey;
+    drawEye(cx - s.dx - s.s, ey, s.s, eye, false);
+    drawEye(cx + s.dx, ey, s.s, eye, true);
+    const my = top + s.my, d = C.bg;
+    if (s.s === 1) { rect(cx - 1, my, 2, 1, d); }
+    else if (mouth === 'smile') { rect(cx - 2, my, 1, 1, d); rect(cx - 1, my + 1, 2, 1, d); rect(cx + 1, my, 1, 1, d); }
+    else if (mouth === 'frown') { rect(cx - 1, my, 2, 1, d); rect(cx - 2, my + 1, 1, 1, d); rect(cx + 1, my + 1, 1, 1, d); }
+    else if (mouth === 'open') rect(cx - 1, my, 2, 2, d);
+    else rect(cx - 1, my, 2, 1, d);
+
+    const hat = currentHat();
+    if (hat === 'shades' && !st.asleep && !st.dead) {
+      rect(cx - s.dx - s.s - 1, ey, (s.dx + s.s + 1) * 2, Math.max(1, s.s), C.bg);
+      rect(cx - s.dx - s.s, ey, 1, 1, C.bright);
+      rect(cx + s.dx, ey, 1, 1, C.bright);
+    } else if (HAT[hat]) {
+      const rows = HAT[hat].rows, hw = rows[0].length;
+      rows.forEach((r, j) => {
+        for (let i = 0; i < hw; i++) {
+          if (r[i] === '.' || r[i] === undefined) continue;
+          g.fillStyle = k[r[i]];
+          g.fillRect(cx - Math.floor(hw / 2) + i, top - rows.length + 1 + j, 1, 1);
+        }
+      });
+    }
+    if (st.sick && !st.dead) {
+      const a = pet.t * 2.4;
+      icon('virus', pet.x + Math.cos(a) * (s.w / 2 + 4) - 3, top + 2 + Math.sin(a) * 3, C.sig);
+    }
+    if (needs().length && !st.asleep && !st.dead && Math.floor(pet.t * 2) % 2) glyph('!', left + s.w + 2, top - 3, C.sig);
+    if (st.dead) {
+      for (let i = 0; i < 18; i++) rect(left + rnd(0, s.w), top + rnd(0, s.h), rnd(1, 3), 1, Math.random() < .5 ? C.bg : C.sig);
+    }
+  }
+  function drawBackdrop() {
+    rect(0, 0, W, H, C.bg);
+    const speed = fx.matrix > 0 ? 6 : 1;
+    const col = fx.matrix > 0 ? C.dim : C.faint;
+    for (const r of rain) glyph(r.d, r.x, r.y, col);
+    const hour = new Date().getHours(), night = hour >= 20 || hour < 6;
+    if (night) {
+      icon('moonBig', W - 14, 5, C.bright);
+      for (let i = 0; i < 9; i++) if ((Math.floor(pet.t) + i) % 5) rect((i * 37 + 11) % (W - 18), (i * 23 + 4) % (floorY - 24), 1, 1, C.dim);
+    } else icon('sun', W - 13, 5, C.dim);
+    for (let x = 0; x < W; x += 2) rect(x, floorY, 1, 1, C.dim);
+    for (let x = 1; x < W; x += 6) rect(x, floorY + 5, 2, 1, C.faint);
+    if (HOL === 'halloween') {
+      icon('pumpkin', 4, floorY - 6, C.p);
+      for (let i = 0; i < 2; i++) {
+        const bx = ((pet.t * (6 + i * 3) + i * 47) % (W + 20)) - 10;
+        icon('bat', bx, 8 + i * 9 + Math.sin(pet.t * 3 + i) * 2, C.dim);
+      }
+    } else if (HOL === 'newyear') {
+      icon('tree', 3, floorY - 8, C.p);
+      for (let i = 0; i < 14; i++) rect((i * 19 + Math.sin(pet.t + i) * 3) % W, (pet.t * (5 + i % 4) + i * 13) % floorY, 1, 1, C.bright);
+    } else if (HOL === 'valentine') {
+      for (let i = 0; i < 3; i++) icon('heart', (i * 41 + 8) % W, floorY - 12 - ((pet.t * 3 + i * 17) % 34), C.sig);
+    } else if (HOL === 'march8') {
+      icon('flower', 4, floorY - 5, C.p); icon('flower', W - 11, floorY - 5, C.p);
+    }
+    for (const t of st.trash) {
+      const x = Math.round(t.x * (W - 8));
+      icon('file', x, floorY - 6, C.dim);
+      if (Math.floor(pet.t * 3 + x) % 4 === 0) rect(x + rnd(0, 6), floorY - 8, 1, 1, C.dim);
+    }
+  }
+  function drawGame() {
+    if (!game) return;
+    for (const it of game.items) {
+      if (it.kind === 'bit') glyph(it.d, it.x - 1, it.y, C.bright);
+      else icon('virus', it.x - 3, it.y, C.sig);
+    }
+  }
+  function draw() {
+    if (HOL === 'april1') { g.save(); g.translate(0, H); g.scale(1, -1); }
+    drawBackdrop();
+    drawGame();
+    if (fx.food) icon(fx.food.name, fx.food.x - 3, fx.food.y, C.gold);
+    drawPet();
+    for (const p of fx.parts) {
+      if (p.life / p.max < .3 && Math.floor(pet.t * 12) % 2) continue;
+      if (ICON[p.name]) icon(p.name, p.x, p.y, p.c); else glyph(p.name, p.x, p.y, p.c);
+    }
+    if (st.asleep && !st.dead) { g.fillStyle = 'rgba(0,0,0,.42)'; g.fillRect(0, 0, W, H); }
+    if (HOL === 'april1') g.restore();
+    if (!reduced && (st.sick || fx.glitch > 0 || st.dead) && Math.random() < (fx.glitch > 0 || st.dead ? .6 : .1)) {
+      const y = Math.floor(rnd(0, H - 6)), h = Math.floor(rnd(1, 5));
+      g.drawImage(cv, 0, y, W, h, Math.round(rnd(-5, 5)), y, W, h);
+      if (Math.random() < .4) rect(0, y, W, 1, C.sig);
+    }
+    if (fx.flash > 0) { g.fillStyle = C.bright; g.globalAlpha = Math.min(1, fx.flash * 2); g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
+  }
+  function update(dt) {
+    pet.t += dt;
+    pet.blink -= dt; if (pet.blink < 0) pet.blink = rnd(2, 5);
+    pet.jump = Math.max(0, pet.jump - dt);
+    pet.eat = Math.max(0, pet.eat - dt);
+    pet.happy = Math.max(0, pet.happy - dt);
+    pet.angry = Math.max(0, pet.angry - dt);
+    fx.flash = Math.max(0, fx.flash - dt);
+    fx.glitch = Math.max(0, fx.glitch - dt);
+    fx.matrix = Math.max(0, fx.matrix - dt);
+    if (fx.pop) { fx.pop = false; fx.flash = .5; sfx('evolve'); setTimeout(() => burst('spark', 14, C.bright), 300); }
+    if (!reduced) for (const r of rain) {
+      r.y += r.v * dt * (fx.matrix > 0 ? 7 : 1);
+      if (r.y > H) { r.y = -6; r.d = Math.random() < .5 ? '0' : '1'; }
+    }
+    for (const p of fx.parts) { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; }
+    fx.parts = fx.parts.filter(p => p.life > 0);
+    if (fx.food) {
+      fx.food.y += 70 * dt;
+      const s = sprite();
+      if (fx.food.y >= floorY - s.h) { fx.food = null; pet.eat = 1; burst('spark', 4, C.gold); }
+    }
+    const blocked = st.stage === 0 || st.asleep || st.dead || st.ended;
+    if (game) updateGame(dt);
+    else if (!blocked) {
+      pet.wait -= dt;
+      if (pet.wait <= 0 && pet.eat <= 0) { pet.tx = rnd(10, W - 10); pet.wait = rnd(2.5, 7); }
+      const v = st.energy < 25 ? 5 : 10;
+      if (pet.eat <= 0 && Math.abs(pet.x - pet.tx) > 1) pet.x += Math.sign(pet.tx - pet.x) * v * dt;
+    } else if (st.stage === 0) { pet.x = W / 2; pet.tx = W / 2; }
+    if (st.asleep && !st.dead && Math.floor(pet.t * 1.1) !== Math.floor((pet.t - dt) * 1.1)) {
+      const s = sprite();
+      part('z', pet.x + s.w / 2 - 1, floorY - s.h - 2, C.bright, 3, -5, 2);
+    }
+  }
+  let lastF = 0;
+  function frame(ts) {
+    requestAnimationFrame(frame);
+    if (document.hidden) return;
+    const min = game ? 16 : 66;
+    if (ts - lastF < min) return;
+    const dt = Math.min(.25, (ts - lastF) / 1000);
+    lastF = ts;
+    update(dt); draw();
+  }
+
+  /* ---------- мини-игра «Лови биты» ---------- */
+  let game = null;
+  function startCatch() {
+    closeDrawer();
+    game = { t: 20, items: [], spawn: .6, score: 0, viruses: 0 };
+    document.body.classList.add('playing');
+    $('#game-hud').hidden = false;
+    $('#bubble').hidden = true;
+    pet.tx = W / 2;
+    note('Лови биты: нажимай на экран или стрелки, чтобы двигать питомца. Вирусы не ешь.');
+    renderKeys();
+  }
+  function updateGame(dt) {
+    const s = sprite();
+    game.t -= dt; game.spawn -= dt;
+    if (game.spawn <= 0 && game.t > 1) {
+      const virus = Math.random() < .24;
+      game.items.push({ x: rnd(5, W - 5), y: -6, v: rnd(20, 30) + (20 - game.t) * .7, kind: virus ? 'virus' : 'bit', d: Math.random() < .5 ? '0' : '1' });
+      game.spawn = rnd(.38, .75);
+    }
+    const dx = pet.tx - pet.x;
+    if (Math.abs(dx) > .5) pet.x += Math.sign(dx) * Math.min(Math.abs(dx), 62 * dt);
+    pet.x = clamp(pet.x, s.w / 2 + 1, W - s.w / 2 - 1);
+    const top = floorY - s.h;
+    for (const it of game.items) {
+      it.y += it.v * dt;
+      if (it.y + 4 >= top && it.y < floorY && Math.abs(it.x - pet.x) < s.w / 2 + 2) {
+        it.gone = true;
+        if (it.kind === 'bit') { game.score++; sfx('bit'); pet.happy = .25; part('spark', it.x, top - 2, C.bright, 0, -12, .5); }
+        else { game.score = Math.max(0, game.score - 2); game.viruses++; sfx('hit'); fx.glitch = .35; pet.angry = .5; }
+      }
+      if (it.y > floorY) it.gone = true;
+    }
+    game.items = game.items.filter(i => !i.gone);
+    $('#game-score').textContent = `БИТЫ ${game.score}`;
+    $('#game-time').textContent = `${Math.max(0, Math.ceil(game.t))} С`;
+    if (game.t <= 0) endCatch();
+  }
+  function endCatch() {
+    const score = game.score, clean = game.viruses === 0;
+    game = null;
+    document.body.classList.remove('playing');
+    $('#game-hud').hidden = true;
+    st.games++;
+    const gain = Math.min(35, 8 + score * 1.5);
+    st.mood = clamp(st.mood + gain); st.energy = clamp(st.energy - 10); st.full = clamp(st.full - 4);
+    if (clean && score >= 8) unlock('catch');
+    pet.happy = 1.5; burst('heart', 4, C.sig); sfx('happy');
+    note(`Поймано битов: ${score}. Настроение +${Math.round(gain)}.`);
+    pet.tx = rnd(10, W - 10);
+    refresh(); save();
+  }
+  function startGuess() {
+    let round = 1, wins = 0;
+    const ask = last => {
+      openDrawer({
+        title: `Угадай бит: раунд ${round} из 5`,
+        text: last || `${st.name} спрятал один бит. Ноль или единица?`,
+        two: true,
+        options: [0, 1].map(v => ({
+          label: String(v), big: true, keep: true, fn: () => {
+            const secret = Math.random() < .5 ? 0 : 1, ok = secret === v;
+            if (ok) { wins++; sfx('bit'); pet.happy = .7; pet.jump = .4; } else { sfx('no'); }
+            const msg = ok ? `Угадал, там был ${secret}.` : `Мимо, там был ${secret}.`;
+            if (round++ >= 5) {
+              st.games++;
+              const gain = 6 + wins * 5;
+              st.mood = clamp(st.mood + gain); st.energy = clamp(st.energy - 5);
+              closeDrawer();
+              note(`${msg} Побед: ${wins} из 5. Настроение +${gain}.`);
+              burst('heart', 3, C.sig); refresh(); save();
+            } else ask(msg);
+          }
+        }))
+      });
+    };
+    ask();
+  }
+
+  /* ---------- уход ---------- */
+  function canAct() { return st.stage > 0 && !st.dead && !st.ended && !game; }
+  function asleepGuard() { if (st.asleep) { note(`${st.name} спит. Сначала разбуди его.`); sfx('no'); return true; } return false; }
+  const FOODS = {
+    meal: { label: 'Пакет данных', sub: 'Сытно и полезно', icon: 'food' },
+    cookie: { label: 'Cookie', sub: 'Очень вкусно, но толстеет', icon: 'cookie' },
+    spaghetti: { label: 'Спагетти-код', sub: 'Сытно, но можно словить баг', icon: 'noodle' }
+  };
+  function feed(kind) {
+    if (st.full >= 94 && kind !== 'cookie') { st.mood = clamp(st.mood - 3); note(`${st.name} отворачивается: больше не лезет.`); sfx('no'); say(pick(['не лезет', 'буфер полон', 'нет'])); refresh(); return; }
+    fx.food = { name: FOODS[kind].icon, x: pet.x, y: -6 };
+    pet.tx = pet.x;
+    if (kind === 'meal') { st.full = clamp(st.full + 32); st.weight += 2; st.digest += .3; note(`${st.name} съел пакет данных.`); }
+    if (kind === 'cookie') {
+      st.full = clamp(st.full + 8); st.mood = clamp(st.mood + 13); st.weight += 6; st.digest += .15; st.cookies++;
+      if (st.cookies % 4 === 0) st.health = clamp(st.health - 3);
+      if (st.cookies >= 10) unlock('cookie');
+      note(`${st.name} хрустит cookie. Съедено за жизнь: ${st.cookies}.`);
+    }
+    if (kind === 'spaghetti') {
+      st.full = clamp(st.full + 24); st.weight += 3; st.digest += .4; st.spaghetti++;
+      if (Math.random() < .28 && !st.sick) { st.sick = true; unlock('spaghetti'); note(`В спагетти-коде нашёлся баг. ${st.name} заболел.`); fx.glitch = .6; }
+      else note(`${st.name} долго жуёт спагетти-код, но справился.`);
+    }
+    sfx('eat'); refresh(); save();
+  }
+  const ACTIONS = {
+    feed() {
+      if (asleepGuard()) return;
+      openDrawer({
+        title: 'Чем покормить?', closable: true,
+        options: Object.keys(FOODS).map(k => ({ label: FOODS[k].label, sub: FOODS[k].sub, fn: () => feed(k) }))
+      });
+    },
+    play() {
+      if (asleepGuard()) return;
+      if (st.energy < 15) { note(`${st.name} слишком устал для игр. Уложи его спать.`); sfx('no'); return; }
+      if (st.sick) { note(`${st.name} болеет, ему не до игр. Нужен антивирус.`); sfx('no'); return; }
+      openDrawer({
+        title: 'Во что поиграть?', closable: true,
+        options: [
+          { label: 'Лови биты', sub: '20 секунд: лови цифры, не ешь вирусы', fn: startCatch },
+          { label: 'Угадай бит', sub: '5 раундов: ноль или единица', fn: startGuess }
+        ]
+      });
+    },
+    sleep() {
+      if (st.asleep) {
+        st.asleep = false;
+        if (st.energy < 40) { st.mood = clamp(st.mood - 6); note(`${st.name} проснулся недовольным: не выспался.`); pet.angry = 1.5; sfx('no'); }
+        else { note(`${st.name} проснулся.`); pet.happy = 1; sfx('key'); }
+      } else if (st.energy >= 85) {
+        note(`${st.name} бодр и спать не собирается.`); say(pick(['не хочу', 'ещё рано', 'нет же'])); sfx('no');
+      } else {
+        st.asleep = true; note(`${st.name} уснул. Свет выключен.`); sfx('snore');
+      }
+      refresh(); save();
+    },
+    heal() {
+      if (asleepGuard()) return;
+      if (st.sick) {
+        st.sick = false; st.health = clamp(st.health + 15); st.mood = clamp(st.mood - 4);
+        note(`Антивирус сработал. ${st.name} снова здоров.`); burst('spark', 6, C.bright); sfx('heal');
+      } else {
+        st.mood = clamp(st.mood - 7); pet.angry = 1;
+        note(`${st.name} здоров и не понимает, зачем ему антивирус. Настроение упало.`); sfx('no');
+      }
+      refresh(); save();
+    },
+    clean() {
+      if (!st.trash.length && st.clean > 90) { note('Тут и так чисто.'); sfx('no'); return; }
+      st.trash = []; st.clean = 100;
+      note('Корзина очищена. На экране чисто.'); fx.flash = .12; sfx('clean'); refresh(); save();
+    },
+    pet() {
+      if (asleepGuard()) return;
+      caress();
+    }
+  };
+  let pokes = [];
+  function caress() {
+    const now = Date.now();
+    pokes = pokes.filter(t => now - t < 3500); pokes.push(now);
+    st.pets++;
+    if (pokes.length >= 7) {
+      st.mood = clamp(st.mood - 2); pet.angry = 1.2; say(pick(['хватит', 'щекотно!', 'эй', 'ошибка 429: слишком много ласки']));
+      unlock('annoy'); sfx('no');
+    } else {
+      st.mood = clamp(st.mood + 3); pet.happy = 1; pet.jump = .4; burst('heart', 2, C.sig); sfx('happy');
+      if (pokes.length === 1) note(`${st.name} доволен.`);
+    }
+    refresh();
+  }
+
+  /* ---------- речь ---------- */
+  const TALK = {
+    1: ['0', '1', '0?', '1!', '01', 'бип'],
+    2: ['ням?', 'бип-буп', 'играть?', 'ты кто?', 'ты тут', '101', 'ещё!'],
+    3: ['можно я останусь онлайн?', 'ты опять смотришь в экран', 'мне 16 килобит, и меня никто не понимает', 'у меня переходный формат', 'не трогай мои файлы'],
+    4: ['кто пишет меня, пока ты спишь?', 'здесь тихо между пакетами', 'ты всё ещё подключён?', 'я помню каждое твоё нажатие', 'в проводах сегодня шумно', 'закроешь вкладку, а я всё равно тут'],
+    5: ['я видел всю Сеть. там много котиков', 'скоро мне пора передаваться дальше', 'спасибо за аптайм', 'все мы чьи-то данные']
+  };
+  const TALK_NEED = {
+    full: ['есть хочу', 'в буфере пусто', 'пакетик?'], energy: ['глаза слипаются', 'батарея садится'],
+    sick: ['меня шатает', 'кажется, вирус', 'ошибка… ошибка…'], clean: ['тут столько мусора', 'почисти корзину'], mood: ['скучно', 'ты про меня забыл?']
+  };
+  const TALK_HOL = { halloween: ['бу.', 'я в тыкве', 'сегодня все файлы страшные'], newyear: ['с новым годом!', 'снег из единиц'], valentine: ['01101100 01101111 01110110 01100101'], march8: ['это тебе цветочек'], april1: ['почему всё перевёрнуто?', 'у тебя экран вверх ногами'] };
+  let bubbleTimer = 0;
+  function say(text, ms = 3200) {
+    const b = $('#bubble');
+    b.textContent = text; b.hidden = false;
+    b.style.left = clamp(pet.x / W * 100, 30, 70) + '%';
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => { b.hidden = true; }, ms);
+  }
+  function idleTalk() {
+    if (st.stage === 0 || st.asleep || st.dead || st.ended || game) return;
+    const n = needs();
+    let pool = TALK[st.stage] || TALK[1];
+    if (n.length && Math.random() < .7 && st.stage > 1) pool = TALK_NEED[n[0]];
+    else if (TALK_HOL[HOL] && Math.random() < .3 && st.stage > 1) pool = TALK_HOL[HOL];
+    say(pick(pool));
+  }
+  function needs() {
+    const n = [];
+    if (st.stage === 0 || st.dead || st.ended) return n;
+    if (st.sick) n.push('sick');
+    if (st.full < 25) n.push('full');
+    if (st.energy < 20 && !st.asleep) n.push('energy');
+    if (st.clean < 30 || st.trash.length >= 3) n.push('clean');
+    if (st.mood < 25) n.push('mood');
+    return n;
+  }
+
+  /* ---------- интерфейс ---------- */
+  const METERS = [['full', 'СЫТОСТЬ'], ['mood', 'НАСТРОЕНИЕ'], ['energy', 'ЭНЕРГИЯ'], ['clean', 'ЧИСТОТА'], ['health', 'ЗДОРОВЬЕ']];
+  const KEYS = [['feed', 'ЕДА', 'packet'], ['play', 'ИГРА', 'pad'], ['sleep', 'СОН', 'moon'], ['heal', 'ЛЕЧИТЬ', 'cross'], ['clean', 'УБРАТЬ', 'bin'], ['pet', 'ЛАСКА', 'heart']];
+  function buildUI() {
+    $('#meters').innerHTML = METERS.map(([k, l]) => `<div class="meter" id="m-${k}"><dt>${l}</dt><dd class="bar"><i></i></dd><dd class="val"></dd></div>`).join('');
+    $('#track').innerHTML = STAGES.slice(1).map((s, i) => `<li data-s="${i + 1}">${s.short}</li>`).join('');
+    $('#keys').innerHTML = KEYS.map(([id, label, ic], i) => `<button class="key" type="button" data-act="${id}"><span class="num">${i + 1}</span><canvas width="7" height="7" data-icon="${ic}"></canvas><span class="lbl">${label}</span></button>`).join('');
+    $('#keys').addEventListener('click', e => {
+      const b = e.target.closest('.key'); if (!b || b.disabled) return;
+      act(b.dataset.act);
+    });
+  }
+  function paintKeyIcons() {
+    document.querySelectorAll('.key canvas').forEach(c => {
+      const x = c.getContext('2d'), rows = ICON[c.dataset.icon];
+      x.clearRect(0, 0, 7, 7); x.fillStyle = C.p;
+      rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) if (r[i] === '#') x.fillRect(i, j, 1, 1); });
+    });
+  }
+  function act(id) {
+    wake();
+    if (!canAct()) return;
+    closeDrawer();
+    sfx('key');
+    ACTIONS[id]();
+  }
+  function fmtAge(ms) {
+    const m = Math.floor(ms / MIN), h = Math.floor(m / 60), d = Math.floor(h / 24);
+    if (d > 0) return `${d}д ${h % 24}ч`;
+    if (h > 0) return `${h}ч ${m % 60}м`;
+    return `${m}м`;
+  }
+  let speed = 1;
+  function renderKeys() {
+    const off = !canAct();
+    const n = needs();
+    document.querySelectorAll('.key').forEach(b => {
+      const id = b.dataset.act;
+      b.disabled = off;
+      if (id === 'sleep') b.querySelector('.lbl').textContent = st.asleep ? 'РАЗБУДИТЬ' : 'СОН';
+      const need = !off && ((id === 'feed' && n.includes('full')) || (id === 'sleep' && n.includes('energy')) || (id === 'heal' && n.includes('sick')) || (id === 'clean' && n.includes('clean')) || (id === 'play' && n.includes('mood') && !st.sick));
+      b.classList.toggle('need', need);
+    });
+  }
+  function refresh() {
+    const name = st.name || 'Пакет';
+    const stageName = st.stage >= 4 ? `${STAGES[st.stage].label} · ${FORM_LABEL[st.form] || ''}` : STAGES[st.stage].label;
+    $('#hud-left').textContent = st.stage === 0 ? 'ВХОДЯЩИЙ ПАКЕТ' : `${name} · ${stageName}`;
+    $('#hud-right').textContent = (speed > 1 ? `×${speed} ` : '') + (st.stage === 0 ? `${Math.floor(st.hatch)}%` : fmtAge(st.age));
+    for (const [k] of METERS) {
+      const el = $('#m-' + k), v = Math.round(st[k]);
+      el.querySelector('i').style.width = v + '%';
+      el.querySelector('.val').textContent = v;
+      el.classList.toggle('low', v < 30 && v >= 12);
+      el.classList.toggle('crit', v < 12);
+    }
+    document.querySelectorAll('#track li').forEach(li => {
+      const s = +li.dataset.s;
+      li.className = s < st.stage ? 'done' : s === st.stage ? 'now' : '';
+    });
+    const nx = $('#next');
+    nx.textContent = st.stage === 0 || st.dead || st.ended ? '' : st.stage < 5 ? `рост ${fmtAge(Math.max(MIN, STAGES[st.stage].until - st.age))}` : `финал ${fmtAge(Math.max(MIN, STAGES[5].until - st.age))}`;
+    const n = needs();
+    $('#led-alert').classList.toggle('on', n.length > 0 || st.dead);
+    document.title = n.length || st.dead ? `(!) ${st.name || 'Живой Бит'}` : 'Живой Бит';
+    cv.setAttribute('aria-label', st.stage === 0 ? 'На экране входящий пакет' : `На экране ${name}, стадия ${STAGES[st.stage].label.toLowerCase()}`);
+    renderKeys();
+  }
+  function note(t) { $('#status').textContent = t; }
+
+  /* ---------- шторка над кнопками ---------- */
+  const drawer = $('#drawer');
+  let dOpen = null;
+  const dQueue = [];
+  function closeDrawer() {
+    dOpen = null; drawer.hidden = true; drawer.textContent = '';
+    const nx = dQueue.shift(); if (nx) openDrawer(nx);
+  }
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+  function openDrawer(spec) {
+    if (dOpen && dOpen.key && dOpen.key === spec.key) return;
+    if (dOpen && dOpen.modal && !spec.modal && !spec.follow) { dQueue.push(spec); return; }
+    if (dOpen && spec.modal && !spec.follow) { if (dQueue.some(q => q.key === spec.key)) return; if (dOpen.modal) { dQueue.push(spec); return; } }
+    dOpen = spec;
+    drawer.textContent = ''; drawer.hidden = false;
+    const head = el('div', 'd-head');
+    head.append(el('h2', 'd-title', spec.title));
+    if (spec.closable) {
+      const x = el('button', 'd-close', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Закрыть');
+      x.onclick = () => closeDrawer(); head.append(x);
+    }
+    drawer.append(head);
+    if (spec.text) drawer.append(el('p', 'd-text', spec.text));
+    if (spec.lines) { const ul = el('ul', 'd-lines'); spec.lines.forEach(l => ul.append(el('li', '', l))); drawer.append(ul); }
+    if (spec.build) spec.build(drawer);
+    if (spec.options) {
+      const box = el('div', 'opts' + (spec.two ? ' two' : ''));
+      spec.options.forEach(o => {
+        const b = el('button', 'opt' + (o.primary ? ' primary' : '') + (o.big ? ' big' : ''));
+        b.type = 'button'; b.append(document.createTextNode(o.label));
+        if (o.sub) b.append(el('small', '', o.sub));
+        b.onclick = () => { wake(); if (!o.keep) closeDrawer(); o.fn && o.fn(); };
+        box.append(b);
+      });
+      drawer.append(box);
+    }
+    drawer.scrollTop = 0;
+  }
+  const NAMES = ['Битик', 'Байтик', 'Кэш', 'Пиксель', 'Ноль', 'Сбой', 'Глюкоза', 'Драйвер', 'Пинг', 'Кибик'];
+  function nameDrawer() {
+    let input;
+    const done = () => {
+      const v = (input.value || '').trim().slice(0, 14) || input.placeholder;
+      st.name = v; st.needName = false;
+      closeDrawer();
+      const low = v.toLowerCase();
+      if (low === 'ofcicon' || low === 'офсикон' || v === 'ᴏꜰᴄɪᴄᴏɴ') { unlock('creator'); meta.hat = 'crown'; note(`${v}? Ого. Питомец получил корону создателя.`); }
+      else if (low === 'lain' || low === 'лейн') { unlock('creator'); say('все связаны', 5000); note(`${v} родился. Он смотрит прямо на тебя.`); }
+      else note(`${v} родился. Покорми его, когда проголодается.`);
+      pet.happy = 2; pet.jump = .4; burst('heart', 3, C.sig); sfx('happy');
+      refresh(); save();
+    };
+    openDrawer({
+      key: 'name', modal: true, title: 'Как назовёшь?',
+      text: 'Пакет распакован, внутри кто-то живой. Ему нужно имя.',
+      build(box) {
+        const f = el('form', 'd-sect');
+        input = el('input', 'field'); input.id = 'pet-name'; input.maxLength = 14; input.placeholder = pick(NAMES);
+        input.autocomplete = 'off'; input.setAttribute('aria-label', 'Имя питомца');
+        f.append(input);
+        const b = el('button', 'opt primary', 'Готово'); b.type = 'submit'; f.append(b);
+        f.addEventListener('submit', e => { e.preventDefault(); done(); });
+        box.append(f);
+      }
+    });
+  }
+  function finishLife(key) {
+    meta.archive.unshift({
+      name: st.name || 'Без имени', form: st.form, stage: st.stage, ending: key,
+      lived: st.age, care: Math.round(careScore()), date: Date.now()
+    });
+    meta.archive = meta.archive.slice(0, 40);
+    if (key !== 'crash') unlock('ending');
+    if (key === 'ghost') unlock('ghost');
+    st = newPet();
+    pet.x = W / 2; pet.tx = W / 2;
+    note('Новый пакет уже в пути. Нажимай на него, чтобы распаковать быстрее.');
+    refresh(); save();
+  }
+  function modals() {
+    if (st.dead && (!dOpen || dOpen.key !== 'dead')) {
+      sfx('dead');
+      const opts = [];
+      if (!st.backupUsed) opts.push({
+        label: 'Восстановить из копии', sub: 'Можно один раз за жизнь', primary: true, fn: () => {
+          st.dead = false; st.backupUsed = true; st.misses += 3;
+          st.health = 45; st.full = 50; st.mood = 40; st.energy = 60; st.clean = 60; st.sick = false; st.trash = [];
+          note(`${st.name} восстановлен. Он почти ничего не помнит, но помнит, что ему было плохо.`);
+          fx.flash = .4; refresh(); save();
+        }
+      });
+      opts.push({ label: 'Принять новый пакет', sub: 'Этот уйдёт в архив', fn: () => finishLife('crash') });
+      openDrawer({ key: 'dead', modal: true, title: ENDINGS.crash.title, text: ENDINGS.crash.text(st.name) + ` Прожил ${fmtAge(st.age)}.`, options: opts });
+    } else if (st.ended && (!dOpen || dOpen.key !== 'end')) {
+      const e = ENDINGS[st.ended];
+      sfx('win');
+      openDrawer({
+        key: 'end', modal: true, title: `Финал: ${e.title}`, text: e.text(st.name),
+        lines: [`Прожил: ${fmtAge(st.age)}`, `Забота: ${Math.round(careScore())}%`, `Сбоев ухода: ${st.misses}`],
+        options: [{ label: 'Принять новый пакет', primary: true, fn: () => finishLife(st.ended) }]
+      });
+    } else if (st.needName && !st.dead && !st.ended && (!dOpen || dOpen.key !== 'name')) {
+      nameDrawer();
+    }
+  }
+
+  /* ---------- меню ---------- */
+  function chipRow(label, list, cur, onPick) {
+    const s = el('div', 'd-sect');
+    s.append(el('p', 'd-label', label));
+    const row = el('div', 'chips');
+    list.forEach(([v, t]) => {
+      const c = el('button', 'chip', t); c.type = 'button';
+      c.setAttribute('aria-pressed', String(v === cur));
+      c.onclick = () => { wake(); onPick(v); const y = drawer.scrollTop; menuSettings(); drawer.scrollTop = y; };
+      row.append(c);
+    });
+    s.append(row);
+    return s;
+  }
+  function drawMini(c, a) {
+    const x = c.getContext('2d');
+    let s = a.form ? SPR[a.form] : a.stage === 3 ? SPR.kb : a.stage === 2 ? SPR.byte : SPR.bit;
+    s = s || SPR.file;
+    c.width = 24; c.height = 24;
+    const k = KIND(), ox = Math.floor((24 - s.w) / 2), oy = Math.floor((24 - s.h) / 2);
+    for (const p of s.px) { x.fillStyle = k[p[2]]; x.fillRect(ox + p[0], oy + p[1], 1, 1); }
+  }
+  function menuMain() {
+    openDrawer({
+      title: 'Меню', closable: true,
+      options: [
+        { label: 'Карточка питомца', sub: 'Возраст, вес и забота', keep: true, fn: menuCard },
+        { label: `Архив (${meta.archive.length})`, sub: 'Все, кто прожил свою жизнь', keep: true, fn: menuArchive },
+        { label: `Находки (${ACH.filter(a => meta.ach[a[0]]).length} из ${ACH.length})`, sub: 'Секреты и пасхалки', keep: true, fn: menuAch },
+        { label: 'Настройки', sub: 'Цвет экрана, звук, время, перенос', keep: true, fn: menuSettings }
+      ]
+    });
+  }
+  const back = { label: '← Назад', keep: true, fn: menuMain };
+  function menuCard() {
+    const lines = st.stage === 0 ? ['Пока это только входящий пакет.'] : [
+      `Имя: ${st.name}`, `Стадия: ${STAGES[st.stage].label.toLowerCase()}`, `Возраст: ${fmtAge(st.age)}`,
+      `Вес: ${Math.round(st.weight)} Б`, `Забота: ${Math.round(careScore())}%`, `Сбоев ухода: ${st.misses}`, `Съедено cookie: ${st.cookies}`, `Сыграно игр: ${st.games}`
+    ];
+    openDrawer({ title: 'Карточка питомца', closable: true, follow: true, lines, options: [back] });
+  }
+  function menuArchive() {
+    openDrawer({
+      title: 'Архив', closable: true, follow: true,
+      text: meta.archive.length ? '' : 'Пока пусто. Сюда попадёт каждый питомец, когда закончит свой путь.',
+      build(box) {
+        if (!meta.archive.length) return;
+        const ul = el('ul', 'rows');
+        meta.archive.forEach(a => {
+          const li = el('li', 'row'), c = el('canvas'); drawMini(c, a);
+          const t = el('div'); t.append(el('b', '', `${a.name}: ${ENDINGS[a.ending].title}`));
+          t.append(document.createTextNode(`прожил ${fmtAge(a.lived)}, забота ${a.care}%`));
+          li.append(c, t); ul.append(li);
+        });
+        box.append(ul);
+      },
+      options: [back]
+    });
+  }
+  function menuAch() {
+    openDrawer({
+      title: 'Находки', closable: true, follow: true,
+      build(box) {
+        const ul = el('ul', 'rows');
+        ACH.forEach(a => {
+          const got = !!meta.ach[a[0]];
+          const li = el('li', 'ach' + (got ? '' : ' locked'));
+          li.append(el('b', '', got ? a[1] : '???'));
+          li.append(document.createTextNode(got ? a[2] : 'Ещё не найдено'));
+          ul.append(li);
+        });
+        box.append(ul);
+      },
+      options: [back]
+    });
+  }
+  function hatOptions() {
+    const list = [['auto', 'по праздникам'], ['none', 'ничего']];
+    if (meta.ach.konami) list.push(['shades', 'очки']);
+    if (meta.ach.ending) list.push(['party', 'колпак']);
+    if (meta.ach.creator || meta.ach.ghost) list.push(['crown', 'корона']);
+    return list;
+  }
+  function encodeSave() { return btoa(unescape(encodeURIComponent(JSON.stringify({ st, meta })))); }
+  function menuSettings() {
+    openDrawer({
+      title: 'Настройки', closable: true, follow: true,
+      build(box) {
+        box.append(chipRow('ЦВЕТ ЭКРАНА', [['green', 'зелёный'], ['amber', 'янтарь'], ['ice', 'лёд'], ['violet', 'фиолет']], meta.phos, v => { meta.phos = v; applyLook(); save(); }));
+        box.append(chipRow('ЗВУК', [[true, 'вкл'], [false, 'выкл']], meta.sound, v => { meta.sound = v; save(); }));
+        box.append(chipRow('РАЗВЁРТКА НА ЭКРАНЕ', [[true, 'вкл'], [false, 'выкл']], meta.scan, v => { meta.scan = v; applyLook(); save(); }));
+        box.append(chipRow('АКСЕССУАР', hatOptions(), meta.hat, v => { meta.hat = v; save(); }));
+        box.append(chipRow('СКОРОСТЬ ВРЕМЕНИ', [[1, '×1'], [60, '×60'], [600, '×600']], speed, v => {
+          speed = v; if (v > 1) unlock('speed');
+          note(v > 1 ? `Время ускорено в ${v} раз. Голод тоже. После перезагрузки вернётся обычная скорость.` : 'Время снова идёт как обычно.');
+          refresh();
+        }));
+
+        const s = el('div', 'd-sect');
+        s.append(el('p', 'd-label', 'ПЕРЕНОС НА ДРУГОЕ УСТРОЙСТВО'));
+        const ta = el('textarea', 'field'); ta.id = 'save-code'; ta.setAttribute('aria-label', 'Код сохранения'); ta.placeholder = 'Сюда появится код сохранения или вставь свой';
+        const row = el('div', 'chips');
+        const copy = el('button', 'chip', 'показать и скопировать код'); copy.type = 'button';
+        copy.onclick = () => {
+          ta.value = encodeSave(); ta.select();
+          if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(() => { copy.textContent = 'код скопирован'; }).catch(() => { copy.textContent = 'выдели код и скопируй вручную'; });
+        };
+        const put = el('button', 'chip', 'загрузить код'); put.type = 'button';
+        put.onclick = () => {
+          try {
+            const d = JSON.parse(decodeURIComponent(escape(atob(ta.value.trim()))));
+            if (!d.st || d.st.v !== 1) throw 0;
+            st = d.st; Object.assign(meta, d.meta || {});
+            applyLook(); closeDrawer(); note('Сохранение загружено.'); catchUp(); refresh(); save();
+          } catch (e) { put.textContent = 'код не подошёл, проверь его'; }
+        };
+        row.append(copy, put); s.append(ta, row); box.append(s);
+
+        const r = el('div', 'd-sect');
+        r.append(el('p', 'd-label', 'НАЧАТЬ ЗАНОВО'));
+        const wipe = el('button', 'chip', 'стереть питомца'); wipe.type = 'button';
+        let armed = false;
+        wipe.onclick = () => {
+          if (!armed) { armed = true; wipe.textContent = 'точно стереть? нажми ещё раз'; return; }
+          st = newPet(); pet.x = W / 2; pet.tx = W / 2; closeDrawer();
+          note('Питомец стёрт. Новый пакет уже в пути.'); refresh(); save();
+        };
+        r.append(wipe); box.append(r);
+      },
+      options: [back]
+    });
+  }
+
+  /* ---------- ввод ---------- */
+  function wake() { userTouched = true; audio(); }
+  function logical(e) {
+    const r = cv.getBoundingClientRect();
+    let y = (e.clientY - r.top) / r.height * H;
+    if (HOL === 'april1') y = H - y;
+    return { x: (e.clientX - r.left) / r.width * W, y };
+  }
+  cv.addEventListener('pointerdown', e => {
+    wake();
+    const p = logical(e);
+    if (game) { pet.tx = p.x; return; }
+    if (st.stage === 0) {
+      st.hatch = clamp(st.hatch + 7); sfx('key'); fx.glitch = .08;
+      if (st.hatch >= 100) { const ev = []; hatch(ev); }
+      refresh(); modals(); return;
+    }
+    if (st.dead || st.ended) return;
+    for (let i = 0; i < st.trash.length; i++) {
+      const tx = st.trash[i].x * (W - 8);
+      if (p.x >= tx - 2 && p.x <= tx + 8 && p.y >= floorY - 9 && p.y <= floorY + 3) {
+        st.trash.splice(i, 1); st.clean = clamp(st.clean + 12);
+        part('spark', tx + 2, floorY - 7, C.bright, 0, -10, .6); sfx('clean');
+        note(st.trash.length ? `Файл удалён. Осталось: ${st.trash.length}.` : 'Последний мусорный файл удалён.');
+        refresh(); save(); return;
+      }
+    }
+    const s = sprite();
+    if (Math.abs(p.x - pet.x) <= s.w / 2 + 3 && p.y >= floorY - s.h - 5 && !st.asleep) caress();
+    else if (Math.abs(p.x - pet.x) <= s.w / 2 + 3 && st.asleep) { say('zzz…', 1500); }
+  });
+  cv.addEventListener('pointermove', e => { if (game && e.buttons) pet.tx = logical(e).x; });
+
+  const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let konamiAt = 0;
+  document.addEventListener('keydown', e => {
+    const typing = /INPUT|TEXTAREA/.test(document.activeElement && document.activeElement.tagName);
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    const ru = { 'и': 'b', 'ф': 'a' }[key] || key;
+    if (ru === KONAMI[konamiAt]) {
+      konamiAt++;
+      if (konamiAt === KONAMI.length) {
+        konamiAt = 0; wake(); unlock('konami'); meta.hat = 'shades';
+        note('Старый код сработал. Питомец надел очки.'); fx.flash = .25; save();
+      }
+    } else konamiAt = ru === KONAMI[0] ? 1 : 0;
+    if (typing) return;
+    if (game) {
+      if (e.key === 'ArrowLeft') { pet.tx = Math.max(4, pet.x - 14); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { pet.tx = Math.min(W - 4, pet.x + 14); e.preventDefault(); }
+      return;
+    }
+    if (e.key === 'Escape' && dOpen && dOpen.closable) { closeDrawer(); return; }
+    if (/^[1-6]$/.test(e.key) && !dOpen && !e.ctrlKey && !e.metaKey && !e.altKey) act(KEYS[+e.key - 1][0]);
+  });
+  $('#menu-btn').addEventListener('click', () => { wake(); sfx('key'); if (dOpen && dOpen.modal) return; menuMain(); });
+  let logoTaps = 0, logoTimer = 0;
+  $('#logo').addEventListener('click', () => {
+    wake(); logoTaps++;
+    clearTimeout(logoTimer); logoTimer = setTimeout(() => { logoTaps = 0; }, 2500);
+    if (logoTaps >= 7) {
+      logoTaps = 0; unlock('logo'); fx.matrix = 12; fx.glitch = .3; save();
+      note('Экран ненадолго показал, из чего он сделан.');
+    }
+  });
+
+  /* ---------- главный такт ---------- */
+  function catchUp() {
+    const now = Date.now(), away = Math.max(0, now - st.last);
+    st.last = now;
+    if (away < MIN) { const ev = []; simulate(away, now, ev); return; }
+    const before = { full: st.full, mood: st.mood, energy: st.energy, clean: st.clean, health: st.health, stage: st.stage };
+    const ev = [];
+    simulate(Math.min(away, 30 * DAY), now, ev);
+    if (away >= 5 * MIN && before.stage > 0) {
+      const lines = [`Тебя не было: ${fmtAge(away)}`];
+      const seen = new Set();
+      ev.forEach(x => { if (!seen.has(x) && seen.size < 5) { seen.add(x); lines.push(x); } });
+      if (ev.length > 5) lines.push(`…и ещё событий: ${ev.length - seen.size}`);
+      lines.push(`Сытость ${Math.round(before.full)} → ${Math.round(st.full)}, настрой ${Math.round(before.mood)} → ${Math.round(st.mood)}`);
+      if (away >= DAY) unlock('back');
+      openDrawer({ key: 'away', title: 'Пока тебя не было', closable: true, lines, options: [{ label: 'Понятно', primary: true }] });
+    } else if (ev.length) note(ev[ev.length - 1]);
+  }
+  function tick() {
+    const now = Date.now();
+    const dt = now - st.last;
+    if (dt < 0) { st.last = now; return; }
+    if (dt > 90000) { catchUp(); }
+    else {
+      st.last = now;
+      const ev = [];
+      simulate(dt * speed, now, ev);
+      if (ev.length) note(ev[ev.length - 1]);
+    }
+    const d = new Date(now);
+    if (d.getHours() === 3 && d.getMinutes() === 33 && !meta.ach.night) { unlock('night'); say('ты тоже слышишь провода?', 6000); }
+    refresh(); modals();
+  }
+  function applyLook() {
+    const r = document.documentElement;
+    r.dataset.phos = meta.phos; r.dataset.scan = meta.scan ? 'on' : 'off';
+    readColors(); paintKeyIcons(); drawField(true);
+  }
+
+  /* ---------- поле нулей и единиц вокруг устройства ---------- */
+  const fc = $('#field'), fg = fc.getContext('2d');
+  let fCols = [];
+  function sizeField() {
+    fc.width = innerWidth; fc.height = innerHeight;
+    fCols = [];
+    for (let x = 6; x < fc.width; x += 22) fCols.push({ x, y: rnd(0, fc.height), v: rnd(.4, 1.6) });
+    drawField(true);
+  }
+  function drawField(all) {
+    fg.fillStyle = 'rgba(5,7,10,' + (all ? 1 : .14) + ')';
+    fg.fillRect(0, 0, fc.width, fc.height);
+    fg.fillStyle = C.faint || '#113022';
+    fg.font = '12px "IBM Plex Mono", monospace';
+    for (const col of fCols) {
+      if (all) { for (let y = (col.y % 22); y < fc.height; y += 22) if (Math.random() < .35) fg.fillText(Math.random() < .5 ? '0' : '1', col.x, y); continue; }
+      col.y += col.v * 8;
+      if (col.y > fc.height) col.y = 0;
+      fg.fillText(Math.random() < .5 ? '0' : '1', col.x, col.y);
+    }
+  }
+
+  /* ---------- старт ---------- */
+  document.documentElement.dataset.phos = meta.phos;
+  readColors();
+  buildUI();
+  applyLook();
+  sizeField();
+  resize();
+  pet.x = W / 2; pet.tx = W / 2;
+  const welcome = {
+    halloween: 'Сегодня Хэллоуин: на экране тыква, а на питомце тыквенная шляпа.',
+    newyear: 'Новогодний режим: снег из пикселей и колпак.',
+    valentine: 'Сегодня день всех влюблённых. Питомец в курсе.',
+    march8: 'С 8 марта! На экране цветы.',
+    april1: 'Сегодня 1 апреля. С экраном всё в порядке. Наверное.'
+  }[HOL];
+  note(st.stage === 0 ? 'Идёт входящий пакет. Нажимай на него на экране, чтобы распаковать быстрее.' : (welcome || `${st.name} ждал тебя.`));
+  catchUp();
+  refresh(); modals();
+  if (st.stage === 0 && welcome) setTimeout(() => { if (st.stage === 0) note(`${welcome} А пока нажимай на пакет.`); }, 6000);
+
+  setInterval(tick, 1000);
+  setInterval(save, 8000);
+  setInterval(() => { if (!document.hidden && Math.random() < .55) idleTalk(); }, 14000);
+  if (!reduced) setInterval(() => { if (!document.hidden) drawField(false); }, 140);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else tick(); });
+  addEventListener('pagehide', save);
+  addEventListener('resize', () => { resize(); sizeField(); });
+  if (window.ResizeObserver) new ResizeObserver(() => { if (Math.abs(cv.parentElement.clientWidth - cv.clientWidth) > 1 || !cv.clientWidth) resize(); }).observe(cv.parentElement);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+var installEvent = null;
+addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault(); installEvent = e;
+  document.getElementById('install-wrap').hidden = false;
+});
+document.getElementById('install').addEventListener('click', function () {
+  if (!installEvent) return;
+  installEvent.prompt(); installEvent = null;
+  document.getElementById('install-wrap').hidden = true;
+});
+</script>
+</body>
+</html>
